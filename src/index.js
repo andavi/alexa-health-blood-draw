@@ -10,6 +10,9 @@ exports.handler = function(event, context, callback) {
 };
 
 var handlers = {
+  'LaunchRequest': function () {
+        this.emit(':tell', 'Hello World!');
+  },
   'GetTubeIntent': function () {
     var test = this.event.request.intent.slots.Test;
     if (test.value == "CBC" || test.value == "Complete Blood Count") {
