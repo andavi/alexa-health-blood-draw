@@ -1,0 +1,5 @@
+GetTubeIntent What kind of tube do I need for {Test}
+GetTubeIntent Which tube do I need for {Test}
+GetTubeIntent Which tube should I use for {Test}
+GetTubeIntent What tube for {Test}
+GetTubeIntent {Test} tube

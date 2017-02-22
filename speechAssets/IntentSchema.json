@@ -1,0 +1,13 @@
+{
+  "intents": [
+    {
+      "intent": "GetTubeIntent",
+      "slots": [
+        {
+          "name": "Test",
+          "type": "LIST_OF_TESTS"
+        }
+      ]
+    }
+  ]
+}
