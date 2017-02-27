@@ -1,0 +1,11 @@
+{
+  "version": "1.0",
+  "response": {
+    "outputSpeech": {
+      "type": "SSML",
+      "ssml": "<speak> For the Basic Metabolic Panel test, use the gold tube. </speak>"
+    },
+    "shouldEndSession": true
+  },
+  "sessionAttributes": {}
+}
