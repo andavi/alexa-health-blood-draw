@@ -6,7 +6,7 @@ var Alexa = require("alexa-sdk");
 /*
   TESTING PROCEDURE:
     - make sure you're in the src directory
-    - node_modules/.bin/mocha 
+    - node_modules/.bin/mocha
 */
 
 exports.handler = function(event, context, callback) {
@@ -30,5 +30,8 @@ var handlers = {
     else {
       this.emit(':tell', 'Sorry, I don\'t have information for that test. Please ask about a different one.');
     }
+  },
+  'Unhandled': function() {
+    this.emit(':tell', 'Sorry, I don\'t have information for that test. Please ask about a different one.');
   }
 };

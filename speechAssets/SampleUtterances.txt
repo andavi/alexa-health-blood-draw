@@ -1,5 +1,12 @@
-GetTubeIntent What kind of tube do I need for {Test}
-GetTubeIntent Which tube do I need for {Test}
-GetTubeIntent Which tube should I use for {Test}
-GetTubeIntent What tube for {Test}
+GetTubeIntent what kind of tube do I need for {Test}
+GetTubeIntent what kind of tube do I need for the {Test} test
+GetTubeIntent which tube do I need for {Test}
+GetTubeIntent which tube do I need for the {Test} test
+GetTubeIntent which tube should I use for {Test}
+GetTubeIntent which tube should I use for the {Test} test
+GetTubeIntent what tube for {Test}
+GetTubeIntent what tube for the {Test} test
 GetTubeIntent {Test} tube
+GetTubeIntent tube for {Test}
+GetTubeIntent tube for the {Test} test
+GetTubeIntent {Test}
