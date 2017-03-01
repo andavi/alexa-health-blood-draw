@@ -21,7 +21,7 @@
 	  	"slots": {
 	  		"Test": {
 	    		"name": "Test",
-	      	"value": "basic metabolic panel"
+	      	"value": "bmp"
 	    	}
 	  	}
 	  },

@@ -23,7 +23,23 @@ var handlers = {
   },
   'GetTubeIntent': function () {
     var test = this.event.request.intent.slots.Test.value.toLowerCase();
-    if (test == "complete blood count") {
+    console.log('test -> ' + test);
+    if (!data.hasOwnProperty(test)) {
+      console.log('data doesn\'t have it');
+      test = test_map[test];
+      console.log('test is now -> ' + test);
+    }
+    if (test != null) {
+      var s = get_prefix(test) + ', use the ' + data[test]["tube"] + ' tube.'
+      console.log(s);
+      this.emit(':tell', s)
+    }
+    else {
+      var s = 'Sorry, I don\'t have information for that test. Please ask about a different one.';
+      console.log(s);
+      this.emit(':tell', s);
+    }
+    /*if (test == "complete blood count") {
       //this.emit(':tell', 'For the Complete Blood Count test, use the lavender tube.');
       this.emit(':tell', 'For the Complete Blood Count test, use the ' + data["complete blood count"]["tube"] + ' tube.');
     }
@@ -33,6 +49,18 @@ var handlers = {
     }
     else {
       this.emit(':tell', 'Sorry, I don\'t have information for that test. Please ask about a different one.');
-    }
+    }*/
   }
 };
+
+var get_prefix = function(test) {
+  if (test.includes('panel')) {
+    return "For the " + test;
+  }
+  return "For the " + test + " test";
+}
+
+var test_map = {"cbc": "complete blood count", "bmp": "basic metabolic panel", "lipid": "lipid panel", "lipids": "lipid panel",
+                "hepatic function": "hepatic function panel", "liver function panel": "hepatic function panel",
+                "liver function": "hepatic function panel", "liver": "hepatic function panel", "vitamin b12": "vitamin b12 level",
+                "b12": "vitamin b12 level", "b12 level": "vitamin b12 level", "alcohol": "alcohol panel"};
