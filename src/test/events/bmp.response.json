@@ -3,7 +3,7 @@
   "response": {
     "outputSpeech": {
       "type": "SSML",
-      "ssml": "<speak> For the Basic Metabolic Panel test, use the gold tube. </speak>"
+      "ssml": "<speak> For the Basic Metabolic Panel, use the gold tube. </speak>"
     },
     "shouldEndSession": true
   },
