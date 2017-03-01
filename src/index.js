@@ -30,10 +30,10 @@ var handlers = {
             console.log('test is now -> ' + test);
         }
         if (test != null) {
-            // var s = get_prefix(test) + ', use the ' + data[test]["tube"] + ' tube.'
-            var s = get_prefix(test) + ', use the ' + data[test]["tube"] + ' tube. It needs a quantity of ' + data[test]["amount"]
+            // var s = get_prefix(test) + ', use the ' + data[test]["tube"] + ' tube.';
+            var s = get_prefix(test) + ', use the ' + data[test]["tube"] + ' tube. It needs a quantity of ' + data[test]["amount"] + 'milliters.';
             console.log(s);
-            this.emit(':tell', s)
+            this.emit(':tell', s);
         } else {
             var s = 'Sorry, I don\'t have information for that test. Please ask about a different one.';
             console.log(s);
