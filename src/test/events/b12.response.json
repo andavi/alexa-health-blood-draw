@@ -1,0 +1,11 @@
+{
+  "version": "1.0",
+  "response": {
+    "outputSpeech": {
+      "type": "SSML",
+      "ssml": "<speak> For the vitamin B12 Level test, use the gold tube. </speak>"
+    },
+    "shouldEndSession": true
+  },
+  "sessionAttributes": {}
+}
