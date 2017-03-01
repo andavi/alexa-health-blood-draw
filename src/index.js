@@ -31,7 +31,7 @@ var handlers = {
         }
         if (test != null) {
             // var s = get_prefix(test) + ', use the ' + data[test]["tube"] + ' tube.';
-            var s = get_prefix(test) + ', use the ' + data[test]["tube"] + ' tube. It needs a quantity of ' + data[test]["amount"] + 'milliters.';
+            var s = get_prefix(test) + ', use the ' + data[test]["tube"] + ' tube. It needs a quantity of ' + data[test]["amount"] + ' milliliters.';
             console.log(s);
             this.emit(':tell', s);
         } else {
