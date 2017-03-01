@@ -1,32 +1,32 @@
 {
     "complete blood count": {
         "tube": "lavender",
-        "amount": "1mL",
+        "amount": 1,
         "info": ""
     },
     "basic metabolic panel": {
         "tube": "gold",
-        "amount": "1mL",
+        "amount": 1,
         "info": ""
     },
     "lipid panel": {
         "tube": "gold",
-        "amount": "2mL",
+        "amount": 2,
         "info": ""
     },
     "hepatic function panel": {
         "tube": "gold",
-        "amount": "1mL",
+        "amount": 1,
         "info": ""
     },
     "vitamin B12 level": {
         "tube": "gold",
-        "amount": "4mL",
+        "amount": 4,
         "info": ""
     },
     "alcohol panel": {
         "tube": "blue",
-        "amount": "7mL",
+        "amount": 7,
         "info": "don't prep the patient with an alcohol swab"
     }
 }
