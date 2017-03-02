@@ -31,8 +31,9 @@ var handlers = {
         }
         if (test != null) {
             // var s = get_prefix(test) + ', use the ' + data[test]["tube"] + ' tube.';
-            var suffix = data[test]["amount"] == 1 ? ' milliliter' : ' milliliters';
-            var s = get_prefix(test) + ', use the ' + data[test]["tube"] + ' tube. It needs a quantity of ' + data[test]["amount"] + suffix;
+            var quantity_suffix = data[test]["amount"] == 1 ? ' milliliter' : ' milliliters';
+            var info = data[test]["info"].length > 0 ? ' Remember, ' + data[test]["info"] : "";
+            var s = get_prefix(test) + ', use the ' + data[test]["tube"] + ' tube. It needs a quantity of ' + data[test]["amount"] + quantity_suffix + '.' + info;
             console.log(s);
             this.emit(':tell', s);
         } else {
