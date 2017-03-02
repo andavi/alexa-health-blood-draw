@@ -19,7 +19,7 @@ exports.handler = function(event, context, callback) {
 
 var handlers = {
     'LaunchRequest': function() {
-        this.emit(':tell', 'Welcome to the Blood Draw skill!');
+        this.emit(':ask', 'Welcome to the Blood Draw skill! Which test would you like to know about?', 'Please specify a test.');
     },
     'GetTubeIntent': function() {
         var test = this.event.request.intent.slots.Test.value.toLowerCase();
@@ -40,17 +40,6 @@ var handlers = {
             console.log(s);
             this.emit(':tell', s);
         }
-        /*if (test == "complete blood count") {
-          //this.emit(':tell', 'For the Complete Blood Count test, use the lavender tube.');
-          this.emit(':tell', 'For the Complete Blood Count test, use the ' + data["complete blood count"]["tube"] + ' tube.');
-        }
-        else if (test == "basic metabolic panel") {
-          //this.emit(':tell', 'For the Basic Metabolic Panel test, use the gold tube.');
-          this.emit(':tell', 'For the Basic Metabolic Panel, use the ' + data["basic metabolic panel"]["tube"] + ' tube.');
-        }
-        else {
-          this.emit(':tell', 'Sorry, I don\'t have information for that test. Please ask about a different one.');
-        }*/
     }
 };
 
