@@ -59,6 +59,9 @@ var get_prefix = function(test) {
 
 var get_tests = function(test) {
   var words = get_words(test);
+  console.log(words);
+  words = strip_ands(words);
+  console.log('after strip ands -> ' + words);
   var tests = [];
   var current = "";
   for (var i=0; i<words.length; i++) {
@@ -78,7 +81,17 @@ var get_tests = function(test) {
     }
   }
   return tests;
-}
+};
+
+var strip_ands = function(words) {
+  var new_words = [];
+  for (var i=0; i<words.length; i++) {
+    if (words[i] != 'and') {
+      new_words.push(words[i]);
+    }
+  }
+  return new_words;
+};
 
 var get_words = function(test) {
   var words = [];
