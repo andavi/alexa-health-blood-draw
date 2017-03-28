@@ -123,3 +123,72 @@ var test_map = {
     "b12 level": "vitamin b12 level",
     "alcohol": "alcohol panel"
 };
+
+var tubes = {
+  'royal blue': {
+      vol: 7,
+      contents: 'no additive, special glass and stopper material',
+      uses: 'most drug levels, toxicology screens, and trace elements',
+      comments: ''
+  },
+  'red': {
+    vol: 7,
+    contents: 'no additive',
+    uses: 'cryoglobulins and C.H. fifty',
+    comments: ''
+  },
+  'light blue': {
+    vol: 4.5,
+    contents: '3.2% sodium citrate',
+    uses: 'P.T., P.T.T, T.C.T, C.M.V buffy coat, factor activity',
+    comments: 'tube must be filled 100%, no exceptions'
+  },
+  'gold': {
+    vol: 6,
+    contents: 'separating gel and clot activator',
+    uses: 'most chemistry, endocrine and serology tests, including Hepatitis and HIV',
+    comments: ''
+  },
+  'light blue (yellow label)': {
+    vol: 2,
+    contents: 'thrombin',
+    uses: 'for F.D.P. test only',
+    comments: 'obtain tube from core lab coag, allow to clot'
+  },
+  'green': {
+    vol: 5,
+    contents: 'sodium heparin',
+    uses: 'ammonia, lactate, H.L.A. typing',
+    comments: ''
+  },
+  'tan': {
+    vol: 5,
+    contents: 'K two E.D.T.A.',
+    uses: 'lead levels',
+    comments: ''
+  },
+  'yellow': {
+    vol: 8.5,
+    contents: 'trisodium citrate, citric acid, and dextrose',
+    uses: 'D.N.A. studies, H.I.V. cultures',
+    comments: ''
+  },
+  'pink': {
+    vol: 6,
+    contents: 'K two E.D.T.A.',
+    uses: 'blood type and screen, compatibility study, coombs, H.I.V. viral load',
+    comments: ''
+  },
+  'pearl': {
+    vol: 4,
+    contents: 'separating gel and K two E.D.T.A.',
+    uses: 'adenovirus P.C.R., toxoplasma P.C.R., H.H.V. six P.C.R.',
+    comments: ''
+  },
+  'lavender': {
+    vol: 3,
+    contents: 'K two E.D.T.A.',
+    uses: 'C.B.C./Diff/Retic/Sed rate, F.K. 506, cyclosporin, platelet ab, coombs, flow cytometry',
+    comments: ''
+  }
+};
