@@ -27,24 +27,24 @@ var handlers = {
         var tests = get_tests(test_data);
         console.log(tests);
         var s = "";
-        for (var i=0; i<tests.length; i++) {
-          /*if (!data.hasOwnProperty(test)) {
-              console.log('data doesn\'t have it');
-              test = test_map[test];
-              console.log('test is now -> ' + test);
-          }*/
-          //if (tests[i] != null) {
-              // var s = get_prefix(test) + ', use the ' + data[test]["tube"] + ' tube.';
-              var test = tests[i];
-              var quantity_suffix = data[test]["amount"] == 1 ? ' milliliter' : ' milliliters';
-              var info = data[test]["info"].length > 0 ? ' Remember, ' + data[test]["info"] + '.' : "";
-              s += ' ' + get_prefix(test) + ', use the ' + data[test]["tube"] + ' tube. It needs a quantity of ' + data[test]["amount"] + quantity_suffix + '.' + info;
-              console.log(s);
-          /*} else {
-              var s = 'Sorry, I don\'t have information for that test. Please ask about a different one.';
-              console.log(s);
-              this.emit(':tell', s);
-          }*/
+        for (var i = 0; i < tests.length; i++) {
+            /*if (!data.hasOwnProperty(test)) {
+                console.log('data doesn\'t have it');
+                test = test_map[test];
+                console.log('test is now -> ' + test);
+            }*/
+            //if (tests[i] != null) {
+            // var s = get_prefix(test) + ', use the ' + data[test]["tube"] + ' tube.';
+            var test = tests[i];
+            var quantity_suffix = data[test]["amount"] == 1 ? ' milliliter' : ' milliliters';
+            var info = data[test]["info"].length > 0 ? ' Remember, ' + data[test]["info"] + '.' : "";
+            s += ' ' + get_prefix(test) + ', use the ' + data[test]["tube"] + ' tube. It needs a quantity of ' + data[test]["amount"] + quantity_suffix + '.' + info;
+            console.log(s);
+            /*} else {
+                var s = 'Sorry, I don\'t have information for that test. Please ask about a different one.';
+                console.log(s);
+                this.emit(':tell', s);
+            }*/
         }
         this.emit(':tell', s);
     }
@@ -58,55 +58,55 @@ var get_prefix = function(test) {
 }
 
 var get_tests = function(test) {
-  var words = get_words(test);
-  console.log(words);
-  words = strip_ands(words);
-  console.log('after strip ands -> ' + words);
-  var tests = [];
-  var current = "";
-  for (var i=0; i<words.length; i++) {
-    if (current.length > 0) {
-      current += " " + words[i];
+    var words = get_words(test);
+    console.log(words);
+    words = strip_ands(words);
+    console.log('after strip ands -> ' + words);
+    var tests = [];
+    var current = "";
+    for (var i = 0; i < words.length; i++) {
+        if (current.length > 0) {
+            current += " " + words[i];
+        } else {
+            current = words[i];
+        }
+        if (data.hasOwnProperty(current)) {
+            tests.push(current);
+            current = "";
+        } else if (test_map.hasOwnProperty(current)) {
+            tests.push(test_map[current]);
+            current = "";
+        }
     }
-    else {
-      current = words[i];
-    }
-    if (data.hasOwnProperty(current)) {
-      tests.push(current);
-      current = "";
-    }
-    else if (test_map.hasOwnProperty(current)) {
-      tests.push(test_map[current]);
-      current = "";
-    }
-  }
-  return tests;
+    return tests;
 };
 
 var strip_ands = function(words) {
-  var new_words = [];
-  for (var i=0; i<words.length; i++) {
-    if (words[i] != 'and') {
-      new_words.push(words[i]);
+    var new_words = [];
+    for (var i = 0; i < words.length; i++) {
+        if (words[i] != 'and') {
+            new_words.push(words[i]);
+        }
     }
-  }
-  return new_words;
+    return new_words;
 };
 
 var get_words = function(test) {
-  var words = [];
-  var current = "";
-  for (var i=0; i<test.length; i++) {
-    if (test.charCodeAt(i) != 32) {
-      current += test[i]
+    var words = [];
+    var current = "";
+    for (var i = 0; i < test.length; i++) {
+        if (test.charCodeAt(i) != 32) {
+            // dont' include dots
+            if (test.charCodeAt(i) != 46) {
+                current += test[i];
+            }
+        } else {
+            words.push(current);
+            current = "";
+        }
     }
-    else {
-      words.push(current);
-      current = "";
-    }
-  }
-  words.push(current);
-  return words;
+    words.push(current);
+    return words;
 };
 
 var test_map = {
@@ -121,5 +121,8 @@ var test_map = {
     "vitamin b12": "vitamin b12 level",
     "b12": "vitamin b12 level",
     "b12 level": "vitamin b12 level",
+    "vitamin b 12": "vitamin b12 level",
+    "b 12": "vitamin b12 level",
+    "b 12 level": "vitamin b12 level",
     "alcohol": "alcohol panel"
 };
