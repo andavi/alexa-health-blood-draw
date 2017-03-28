@@ -28,6 +28,7 @@ var handlers = {
         console.log(tests);
         var s = "";
         for (var i=0; i<tests.length; i++) {
+          var test = tests[i];
           /*if (!data.hasOwnProperty(test)) {
               console.log('data doesn\'t have it');
               test = test_map[test];
@@ -35,7 +36,6 @@ var handlers = {
           }*/
           //if (tests[i] != null) {
               // var s = get_prefix(test) + ', use the ' + data[test]["tube"] + ' tube.';
-              var test = tests[i];
               var quantity_suffix = data[test]["amount"] == 1 ? ' milliliter' : ' milliliters';
               var info = data[test]["info"].length > 0 ? ' Remember, ' + data[test]["info"] + '.' : "";
               s += ' ' + get_prefix(test) + ', use the ' + data[test]["tube"] + ' tube. It needs a quantity of ' + data[test]["amount"] + quantity_suffix + '.' + info;
