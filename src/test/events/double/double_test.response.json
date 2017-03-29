@@ -1,0 +1,11 @@
+{
+  "version": "1.0",
+  "response": {
+    "outputSpeech": {
+      "type": "SSML",
+      "ssml": "<speak> For the vitamin b12 level and fructosamine tests, use 2 gold tubes. </speak>"
+    },
+    "shouldEndSession": true
+  },
+  "sessionAttributes": {}
+}

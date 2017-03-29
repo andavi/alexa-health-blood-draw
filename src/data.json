@@ -28,5 +28,10 @@
         "tube": "royal blue",
         "amount": 7,
         "info": "don't prep the patient with an alcohol swab"
+    },
+    "fructosamine": {
+        "tube": "gold",
+        "amount": 4,
+        "info": ""
     }
 }

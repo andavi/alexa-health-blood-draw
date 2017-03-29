@@ -128,8 +128,8 @@ var get_num_of_tubes_needed = function(amount, vol) {
     console.log('amount / vol -> ' + div)
     var modulo = amount % vol;
     console.log('amount % vol -> ' + modulo);
-    console.log(amount / vol + (amount % vol != 0 ? 1 : 0));
-    return amount / vol + (amount % vol != 0 ? 1 : 0);
+    console.log(Math.round(amount / vol) + (amount % vol != 0 ? 1 : 0));
+    return Math.round(amount / vol) + (amount % vol != 0 ? 1 : 0);
   }
 };
 
