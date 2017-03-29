@@ -27,35 +27,149 @@ var handlers = {
         var tests = get_tests(test_data);
         console.log(tests);
         var s = "";
-        for (var i=0; i<tests.length; i++) {
-          var test = tests[i];
-          /*if (!data.hasOwnProperty(test)) {
-              console.log('data doesn\'t have it');
-              test = test_map[test];
-              console.log('test is now -> ' + test);
-          }*/
-          //if (tests[i] != null) {
-              // var s = get_prefix(test) + ', use the ' + data[test]["tube"] + ' tube.';
-              var quantity_suffix = data[test]["amount"] == 1 ? ' milliliter' : ' milliliters';
-              var info = data[test]["info"].length > 0 ? ' Remember, ' + data[test]["info"] + '.' : "";
-              s += ' ' + get_prefix(test) + ', use the ' + data[test]["tube"] + ' tube. It needs a quantity of ' + data[test]["amount"] + quantity_suffix + '.' + info;
-              console.log(s);
-          /*} else {
-              var s = 'Sorry, I don\'t have information for that test. Please ask about a different one.';
-              console.log(s);
-              this.emit(':tell', s);
-          }*/
+        if (tests.length > 1) {
+          var tube_vol_map = {};
+          for (var i=0; i<tests.length; i++) {
+              var test = tests[i];
+              var amount_needed_for_test = data[test]['amount'];
+              var tube_color = data[test]['tube'];
+              var tube_vol = tubes[tube_color]['vol'];
+              //var tubes_needed = get_tubes_needed(amount, tube_vol);
+              if (tube_vol_map.hasOwnProperty(tube_color)) {
+                tube_vol_map[tube_color].tests.push(test);
+                tube_vol_map[tube_color].total += amount_needed_for_test;
+              }
+              else {
+                tube_vol_map[tube_color] = {tests: [test], total: amount_needed_for_test};
+              }
+          }
+          console.log('tube_vol_map -> ' + JSON.stringify(tube_vol_map));
+          for (var t in tube_vol_map) {
+            s += get_prefix(tube_vol_map[t].tests) + get_tubes_output(t, get_num_of_tubes_needed(tube_vol_map[t].total));
+            console.log(s);
+          }
+          /*s = get_prefix(test);
+          //var quantity_suffix = data[test]["amount"] == 1 ? ' milliliter' : ' milliliters';
+          var info = data[test]["info"].length > 0 ? ' Remember, ' + data[test]["info"] + '.' : "";
+          s += get_prefix(test) + ', use the ' + data[test]["tube"] + ' tube. It needs a quantity of ' + data[test]["amount"] + quantity_suffix + '.' + info;
+          console.log(s);*/
+        }
+        else {
+          console.log('only one test');
+          var test = tests[0];
+          var amount_needed_for_test = data[test]['amount'];
+          var tube_color = data[test]['tube'];
+          var tube_vol = tubes[tube_color]['vol'];
+          var num_of_tubes_needed = get_num_of_tubes_needed(amount_needed_for_test, tube_vol);
+          s += get_prefix(tests) + get_tubes_output(tube_color, num_of_tubes_needed);
+          console.log(s);
         }
         this.emit(':tell', s);
     }
 };
 
-var get_prefix = function(test) {
-    if (test.includes('panel')) {
-        return "For the " + test;
-    }
-    return "For the " + test + " test";
+var get_prefix = function(tests) {
+  console.log('in get_prefix');
+  if (tests.length == 1) {
+    console.log('only one test');
+    return get_single_prefix(tests[0]);
+  }
 }
+
+var get_tubes_output = function(color, num) {
+  return num + ' ' + color + (num > 1 ? ' tubes.' : ' tube.');
+};
+
+var get_num_of_tubes_needed = function(amount, vol) {
+  if (amount <= vol) {
+    return 1;
+  }
+  else {
+    return amount / vol + (amount % vol != 0 ? 1 : 0);
+  }
+};
+
+var get_single_prefix = function(test) {
+  console.log('in get_single_prefix');
+  /*if (test.includes('panel')) {
+    return ' For the ' + test + ', use ';
+  }
+  return 'For the ' + test + ' test, use ';*/
+  return 'For the ' + test_or_panel_format(test) + ', use ';
+}
+
+var get_multiple_prefix = function(tests) {
+  if (tests.length == 2) {
+    return 'For the ' + test_or_panel_format(tests[0]) + ' and the ' + test_or_panel_format(tests[1]);
+  }
+  else {
+    var s = '';
+    var panels_list = [];
+    var tests_list = [];
+    for (var t in tests) {
+      if (tests[t].includes('panel')) {
+        panels_list.push(tests[t]);
+      }
+      else {
+        tests_list.push(tests[t]);
+      }
+      /*s += test_or_panel_format(tests[t]);
+      if (t < tests.length-1) {
+        s += ', ';
+      }*/
+    }
+    if (panels_list.length > 0) {
+      s += 'For the ' + format_panel_subsentence(panels_list);
+    }
+    if (tests_list.length > 0) {
+      //s += listify(tests_list, 'test');
+    }
+    s += ', use ';
+    return s;
+  }
+};
+
+var format_panel_subsentence = function(list) {
+  if (list.length == 1) {
+    return list[0];
+  }
+  else {
+    var panels = [];
+    for (var i in list) {
+      var words = list[i].split(' ');
+      panels.push(words.slice(0, words.length-1).join(' '));
+    }
+    if (panels.length == 2) {
+      return panels[0] + ' and ' + panels[1] + ' panels';
+    }
+    else {
+      var s = '';
+      for (var i in panels) {
+        s += panels[i]
+        if (i < panels.length-1) {
+          s += ', ';
+        }
+        if (i == panels.length-2) {
+          s += ' and ';
+        }
+      }
+      s += ' panels';
+      return s;
+    }
+  }
+};
+
+var test_or_panel_format = function(test) {
+  console.log('in test_or_panel_format');
+  var s = ''
+  if (test.includes('panel')) {
+    s = test;
+    return s;
+  }
+  s = test + ' test';
+  console.log(s);
+  return s;
+};
 
 var get_tests = function(test) {
   var words = get_words(test);
