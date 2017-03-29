@@ -3,7 +3,7 @@
   "response": {
     "outputSpeech": {
       "type": "SSML",
-      "ssml": "<speak> For the lipid panel, use the gold tube. </speak>"
+      "ssml": "<speak> For the lipid panel, use 1 gold tube. </speak>"
     },
     "shouldEndSession": true
   },

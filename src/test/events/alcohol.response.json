@@ -3,7 +3,7 @@
   "response": {
     "outputSpeech": {
       "type": "SSML",
-      "ssml": "<speak> For the alcohol panel, use the blue tube. </speak>"
+      "ssml": "<speak> For the alcohol panel, use 1 royal blue tube. </speak>"
     },
     "shouldEndSession": true
   },

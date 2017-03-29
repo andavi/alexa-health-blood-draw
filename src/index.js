@@ -45,7 +45,7 @@ var handlers = {
           }
           console.log('tube_vol_map -> ' + JSON.stringify(tube_vol_map));
           for (var t in tube_vol_map) {
-            s += get_prefix(tube_vol_map[t].tests) + get_tubes_output(t, get_num_of_tubes_needed(tube_vol_map[t].total));
+            s += get_prefix(tube_vol_map[t].tests) + get_tubes_output(t, get_num_of_tubes_needed(tube_vol_map[t].total, tube_vol));
             console.log(s);
           }
           /*s = get_prefix(test);
@@ -69,22 +69,57 @@ var handlers = {
 };
 
 var get_prefix = function(tests) {
-  console.log('in get_prefix');
   if (tests.length == 1) {
-    console.log('only one test');
     return get_single_prefix(tests[0]);
+  }
+  else if (tests.length == 2) {
+    // either two tests, two panels, or 1 each
+    return get_double_prefix(tests);
   }
 }
 
+var get_double_prefix = function(tests) {
+  console.log('in get_double_prefix');
+  var layout = '';
+  if (tests[0].includes('panel')) {
+    layout = 'p';
+  }
+  else {
+    layout = 't';
+  }
+  if (tests[1].includes('panel')) {
+    layout += 'p';
+  }
+  else {
+    layout += 't';
+  }
+  console.log('layout -> ' + layout);
+  if (layout == 'pp') {
+    return 'For the ' + format_panel_list(tests) + ', use ';
+  }
+  //return 'For the ' + test_or_panel_format(tests[0]) + ' and the ' + test_or_panel_format(tests[1]) + ', use ';
+};
+
 var get_tubes_output = function(color, num) {
+  console.log('in get_tubes_output');
+  console.log(num + ' ' + color + (num > 1 ? ' tubes.' : ' tube.'));
   return num + ' ' + color + (num > 1 ? ' tubes.' : ' tube.');
 };
 
 var get_num_of_tubes_needed = function(amount, vol) {
+  console.log('in get_num_of_tubes_needed');
   if (amount <= vol) {
+    console.log(1);
     return 1;
   }
   else {
+    console.log('amount -> ' + amount);
+    console.log('vol -> ' + vol);
+    var div = amount/vol;
+    console.log('amount / vol -> ' + div)
+    var modulo = amount % vol;
+    console.log('amount % vol -> ' + modulo);
+    console.log(amount / vol + (amount % vol != 0 ? 1 : 0));
     return amount / vol + (amount % vol != 0 ? 1 : 0);
   }
 };
@@ -129,7 +164,8 @@ var get_multiple_prefix = function(tests) {
   }
 };
 
-var format_panel_subsentence = function(list) {
+var format_panel_list = function(list) {
+  console.log('in format_panel_list');
   if (list.length == 1) {
     return list[0];
   }

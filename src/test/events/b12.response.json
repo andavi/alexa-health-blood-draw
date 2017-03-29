@@ -3,7 +3,7 @@
   "response": {
     "outputSpeech": {
       "type": "SSML",
-      "ssml": "<speak> For the vitamin b12 level test, use the gold tube. </speak>"
+      "ssml": "<speak> For the vitamin b12 level test, use 1 gold tube. </speak>"
     },
     "shouldEndSession": true
   },

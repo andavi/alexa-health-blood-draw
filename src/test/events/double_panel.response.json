@@ -3,7 +3,7 @@
   "response": {
     "outputSpeech": {
       "type": "SSML",
-      "ssml": "<speak> For the complete blood count test, use 1 lavender tube. </speak>"
+      "ssml": "<speak> For the lipid and hepatic function panels, use 1 gold tube. </speak>"
     },
     "shouldEndSession": true
   },
