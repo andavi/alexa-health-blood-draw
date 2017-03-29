@@ -243,55 +243,55 @@ var test_or_panel_format = function(test) {
 };
 
 var get_tests = function(test) {
-  var words = get_words(test);
-  console.log(words);
-  words = strip_ands(words);
-  console.log('after strip ands -> ' + words);
-  var tests = [];
-  var current = "";
-  for (var i=0; i<words.length; i++) {
-    if (current.length > 0) {
-      current += " " + words[i];
+    var words = get_words(test);
+    console.log(words);
+    words = strip_ands(words);
+    console.log('after strip ands -> ' + words);
+    var tests = [];
+    var current = "";
+    for (var i = 0; i < words.length; i++) {
+        if (current.length > 0) {
+            current += " " + words[i];
+        } else {
+            current = words[i];
+        }
+        if (data.hasOwnProperty(current)) {
+            tests.push(current);
+            current = "";
+        } else if (test_map.hasOwnProperty(current)) {
+            tests.push(test_map[current]);
+            current = "";
+        }
     }
-    else {
-      current = words[i];
-    }
-    if (data.hasOwnProperty(current)) {
-      tests.push(current);
-      current = "";
-    }
-    else if (test_map.hasOwnProperty(current)) {
-      tests.push(test_map[current]);
-      current = "";
-    }
-  }
-  return tests;
+    return tests;
 };
 
 var strip_ands = function(words) {
-  var new_words = [];
-  for (var i=0; i<words.length; i++) {
-    if (words[i] != 'and') {
-      new_words.push(words[i]);
+    var new_words = [];
+    for (var i = 0; i < words.length; i++) {
+        if (words[i] != 'and') {
+            new_words.push(words[i]);
+        }
     }
-  }
-  return new_words;
+    return new_words;
 };
 
 var get_words = function(test) {
-  var words = [];
-  var current = "";
-  for (var i=0; i<test.length; i++) {
-    if (test.charCodeAt(i) != 32) {
-      current += test[i]
+    var words = [];
+    var current = "";
+    for (var i = 0; i < test.length; i++) {
+        if (test.charCodeAt(i) != 32) {
+            // dont' include dots
+            if (test.charCodeAt(i) != 46) {
+                current += test[i];
+            }
+        } else {
+            words.push(current);
+            current = "";
+        }
     }
-    else {
-      words.push(current);
-      current = "";
-    }
-  }
-  words.push(current);
-  return words;
+    words.push(current);
+    return words;
 };
 
 var test_map = {
