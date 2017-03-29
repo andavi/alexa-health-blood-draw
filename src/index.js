@@ -97,6 +97,15 @@ var get_double_prefix = function(tests) {
   if (layout == 'pp') {
     return 'For the ' + format_panel_list(tests) + ', use ';
   }
+  else if (layout == 'pt') {
+    return 'For the ' + tests[0] + ' and the ' + tests[1] + ' test, use ';
+  }
+  else if (layout == 'tp') {
+    return 'For the ' + tests[0] + ' test and the ' + tests[1] + ', use ';
+  }
+  else if (layout == 'tt') {
+    return 'For the ' + tests[0] + ' and ' + tests[1] + ' tests, use ';
+  }
   //return 'For the ' + test_or_panel_format(tests[0]) + ' and the ' + test_or_panel_format(tests[1]) + ', use ';
 };
 
@@ -166,32 +175,28 @@ var get_multiple_prefix = function(tests) {
 
 var format_panel_list = function(list) {
   console.log('in format_panel_list');
-  if (list.length == 1) {
-    return list[0];
+  var panels = [];
+  for (var i in list) {
+    var words = list[i].split(' ');
+    panels.push(words.slice(0, words.length-1).join(' '));
+  }
+  console.log('panels -> ' + panels);
+  if (panels.length == 2) {
+    return panels[0] + ' and ' + panels[1] + ' panels';
   }
   else {
-    var panels = [];
-    for (var i in list) {
-      var words = list[i].split(' ');
-      panels.push(words.slice(0, words.length-1).join(' '));
-    }
-    if (panels.length == 2) {
-      return panels[0] + ' and ' + panels[1] + ' panels';
-    }
-    else {
-      var s = '';
-      for (var i in panels) {
-        s += panels[i]
-        if (i < panels.length-1) {
-          s += ', ';
-        }
-        if (i == panels.length-2) {
-          s += ' and ';
-        }
+    var s = '';
+    for (var i in panels) {
+      s += panels[i]
+      if (i < panels.length-1) {
+        s += ', ';
       }
-      s += ' panels';
-      return s;
+      if (i == panels.length-2) {
+        s += ' and ';
+      }
     }
+    s += ' panels';
+    return s;
   }
 };
 
