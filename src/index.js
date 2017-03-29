@@ -77,9 +77,12 @@ var get_num_of_tubes_needed = function(amount, vol) {
     return 1;
   }
   else {
+    //console.log(amount, vol);
     var div = amount/vol;
+    //console.log(div);
     var modulo = amount % vol;
-    return Math.round(amount / vol) + (amount % vol != 0 ? 1 : 0);
+    //console.log(modulo);
+    return Math.floor(amount / vol) + (amount % vol != 0 ? 1 : 0);
   }
 };
 
@@ -130,34 +133,60 @@ var get_double_prefix = function(tests) {
 };
 
 var get_multiple_prefix = function(tests) {
-  if (tests.length == 2) {
-    return 'For the ' + test_or_panel_format(tests[0]) + ' and the ' + test_or_panel_format(tests[1]);
-  }
-  else {
-    var s = '';
-    var panels_list = [];
-    var tests_list = [];
-    for (var t in tests) {
-      if (tests[t].includes('panel')) {
-        panels_list.push(tests[t]);
-      }
-      else {
-        tests_list.push(tests[t]);
-      }
-      /*s += test_or_panel_format(tests[t]);
-      if (t < tests.length-1) {
-        s += ', ';
-      }*/
+  var s = '';
+  var panels_list = [];
+  var tests_list = [];
+  for (var t in tests) {
+    if (tests[t].includes('panel')) {
+      panels_list.push(tests[t]);
     }
+    else {
+      tests_list.push(tests[t]);
+    }
+  }
+  var s = '';
+  if (panels_list.length > 0) {
+    if (panels_list.length == 1) {
+      s += get_single_prefix(panels_list[0]);
+    }
+    else if (panels_list.length == 2) {
+      s += get_double_prefix(panels_list);
+    }
+    else {
+      s += 'For the ' + format_panel_list(panels_list);
+    }
+  }
+  if (tests_list.length > 0) {
     if (panels_list.length > 0) {
-      s += 'For the ' + format_panel_subsentence(panels_list);
+      s += ' ';
     }
-    if (tests_list.length > 0) {
-      //s += listify(tests_list, 'test');
+    if (tests_list.length == 1) {
+      s += get_single_prefix(tests_list[0]);
     }
-    s += ', use ';
-    return s;
+    else if (tests_list.length == 2) {
+      s += get_double_prefix(tests_list);
+    }
+    else {
+      s += 'For the ' + format_test_list(tests_list);
+    }
   }
+  s += ', use ';
+  return s;
+};
+
+var format_test_list = function(list) {
+  var s = '';
+  for (var i in list) {
+    s += list[i]
+    if (i < list.length-1) {
+      s += ', ';
+    }
+    if (i == list.length-2) {
+      s += 'and ';
+    }
+  }
+  s += ' tests';
+  return s;
 };
 
 var format_panel_list = function(list) {
@@ -177,7 +206,7 @@ var format_panel_list = function(list) {
         s += ', ';
       }
       if (i == panels.length-2) {
-        s += ' and ';
+        s += 'and ';
       }
     }
     s += ' panels';

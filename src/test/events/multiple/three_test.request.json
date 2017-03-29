@@ -1,0 +1,30 @@
+{
+  "version": "1.0",
+  "session": {
+    "new": true,
+    "sessionId": "SessionId.8bfc1294-d28c-489b-8014-fff7e09197b8",
+    "application": {
+      "applicationId": "amzn1.ask.skill.b229e3a0-3ac1-4d0d-9c3b-cbf8131bde8d"
+    },
+    "attributes": {},
+    "user": {
+      "userId": "amzn1.ask.account.AFX5GXODBCUHUWFQQON32LXEDGIW63SSPC2NMWEPHKOBFVKFXP4UEI5W7NE7PPFX4QHVEM5ELIOJ64D4PHQ24WPMZHOX7RFZ2IRZDOQAKNXQ6ON5KU53CKIRBMDDYBIXZFYUKGCGCDBMGI4RC3OMDIVNQTAO2M6CBPLQWP4IWQMQRVZ56RXXUCEOCNAQ2GDNMYVXW2EOSHLDT6Y"
+    }
+  },
+  "request": {
+    "type": "IntentRequest",
+    "requestId": "EdwRequestId.2cd7985b-0a51-4d90-9b2a-b553339abf83",
+    "timestamp": "2017-02-27T16:06:57Z",
+    "locale": "en-US",
+    "intent": {
+      "name": "GetTubeIntent",
+      "slots": {
+        "Test": {
+          "name": "Test",
+          "value": "fructosamine b12 transferrin"
+        }
+      }
+    },
+    "inDialog": false
+  }
+}
