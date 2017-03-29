@@ -68,6 +68,21 @@ var handlers = {
     }
 };
 
+var get_tubes_output = function(color, num) {
+  return num + ' ' + color + (num > 1 ? ' tubes.' : ' tube.');
+};
+
+var get_num_of_tubes_needed = function(amount, vol) {
+  if (amount <= vol) {
+    return 1;
+  }
+  else {
+    var div = amount/vol;
+    var modulo = amount % vol;
+    return Math.round(amount / vol) + (amount % vol != 0 ? 1 : 0);
+  }
+};
+
 var get_prefix = function(tests) {
   if (tests.length == 1) {
     return get_single_prefix(tests[0]);
@@ -76,10 +91,16 @@ var get_prefix = function(tests) {
     // either two tests, two panels, or 1 each
     return get_double_prefix(tests);
   }
+  else {
+    return get_multiple_prefix(tests);
+  }
+}
+
+var get_single_prefix = function(test) {
+  return 'For the ' + test_or_panel_format(test) + ', use ';
 }
 
 var get_double_prefix = function(tests) {
-  console.log('in get_double_prefix');
   var layout = '';
   if (tests[0].includes('panel')) {
     layout = 'p';
@@ -106,41 +127,7 @@ var get_double_prefix = function(tests) {
   else if (layout == 'tt') {
     return 'For the ' + tests[0] + ' and ' + tests[1] + ' tests, use ';
   }
-  //return 'For the ' + test_or_panel_format(tests[0]) + ' and the ' + test_or_panel_format(tests[1]) + ', use ';
 };
-
-var get_tubes_output = function(color, num) {
-  console.log('in get_tubes_output');
-  console.log(num + ' ' + color + (num > 1 ? ' tubes.' : ' tube.'));
-  return num + ' ' + color + (num > 1 ? ' tubes.' : ' tube.');
-};
-
-var get_num_of_tubes_needed = function(amount, vol) {
-  console.log('in get_num_of_tubes_needed');
-  if (amount <= vol) {
-    console.log(1);
-    return 1;
-  }
-  else {
-    console.log('amount -> ' + amount);
-    console.log('vol -> ' + vol);
-    var div = amount/vol;
-    console.log('amount / vol -> ' + div)
-    var modulo = amount % vol;
-    console.log('amount % vol -> ' + modulo);
-    console.log(Math.round(amount / vol) + (amount % vol != 0 ? 1 : 0));
-    return Math.round(amount / vol) + (amount % vol != 0 ? 1 : 0);
-  }
-};
-
-var get_single_prefix = function(test) {
-  console.log('in get_single_prefix');
-  /*if (test.includes('panel')) {
-    return ' For the ' + test + ', use ';
-  }
-  return 'For the ' + test + ' test, use ';*/
-  return 'For the ' + test_or_panel_format(test) + ', use ';
-}
 
 var get_multiple_prefix = function(tests) {
   if (tests.length == 2) {
@@ -174,13 +161,11 @@ var get_multiple_prefix = function(tests) {
 };
 
 var format_panel_list = function(list) {
-  console.log('in format_panel_list');
   var panels = [];
   for (var i in list) {
     var words = list[i].split(' ');
     panels.push(words.slice(0, words.length-1).join(' '));
   }
-  console.log('panels -> ' + panels);
   if (panels.length == 2) {
     return panels[0] + ' and ' + panels[1] + ' panels';
   }
@@ -201,14 +186,12 @@ var format_panel_list = function(list) {
 };
 
 var test_or_panel_format = function(test) {
-  console.log('in test_or_panel_format');
   var s = ''
   if (test.includes('panel')) {
     s = test;
     return s;
   }
   s = test + ' test';
-  console.log(s);
   return s;
 };
 
