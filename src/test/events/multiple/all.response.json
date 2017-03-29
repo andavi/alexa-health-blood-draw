@@ -1,0 +1,11 @@
+{
+  "version": "1.0",
+  "response": {
+    "outputSpeech": {
+      "type": "SSML",
+      "ssml": "<speak> For the complete blood count test, use 1 lavender tube.For the basic metabolic, lipid, and hepatic function panels and For the vitamin b12 level, fructosamine, and transferrin tests, use 3 gold tubes.For the alcohol panel, use 1 royal blue tube. </speak>"
+    },
+    "shouldEndSession": true
+  },
+  "sessionAttributes": {}
+}

@@ -28,28 +28,29 @@ var handlers = {
         console.log(tests);
         var s = "";
         if (tests.length > 1) {
-          var tube_vol_map = {};
-          for (var i=0; i<tests.length; i++) {
+          var input_map = {};
+          for (var i = 0; i < tests.length; i++) {
               var test = tests[i];
               var amount_needed_for_test = data[test]['amount'];
               var tube_color = data[test]['tube'];
-              var tube_vol = tubes[tube_color]['vol'];
-              //var tubes_needed = get_tubes_needed(amount, tube_vol);
-              if (tube_vol_map.hasOwnProperty(tube_color)) {
-                tube_vol_map[tube_color].tests.push(test);
-                tube_vol_map[tube_color].total += amount_needed_for_test;
+              if (input_map.hasOwnProperty(tube_color)) {
+                input_map[tube_color].tests.push(test);
+                input_map[tube_color].total += amount_needed_for_test;
               }
               else {
-                tube_vol_map[tube_color] = {tests: [test], total: amount_needed_for_test};
+                input_map[tube_color] = {tests: [test], total: amount_needed_for_test};
               }
           }
-          console.log('tube_vol_map -> ' + JSON.stringify(tube_vol_map));
-          for (var t in tube_vol_map) {
-            s += get_prefix(tube_vol_map[t].tests) + get_tubes_output(t, get_num_of_tubes_needed(tube_vol_map[t].total, tube_vol));
+          console.log('input_map -> ' + JSON.stringify(input_map));
+          for (var t in input_map) {
+            console.log(t.toUpperCase() + '!!!');
+            var tube_vol = tubes[t]['vol'];
+            console.log('tube_vol -> ' + tube_vol);
+            s += get_prefix(input_map[t].tests) + get_tubes_output(t, get_num_of_tubes_needed(input_map[t].total, tube_vol));
             console.log(s);
           }
           /*s = get_prefix(test);
-          //var quantity_suffix = data[test]["amount"] == 1 ? ' milliliter' : ' milliliters';
+          var quantity_suffix = data[test]["amount"] == 1 ? ' milliliter' : ' milliliters';
           var info = data[test]["info"].length > 0 ? ' Remember, ' + data[test]["info"] + '.' : "";
           s += get_prefix(test) + ', use the ' + data[test]["tube"] + ' tube. It needs a quantity of ' + data[test]["amount"] + quantity_suffix + '.' + info;
           console.log(s);*/
@@ -77,11 +78,11 @@ var get_num_of_tubes_needed = function(amount, vol) {
     return 1;
   }
   else {
-    //console.log(amount, vol);
+    console.log("amount, val - > ", amount, vol);
     var div = amount/vol;
-    //console.log(div);
+    console.log('div -> ' + div);
     var modulo = amount % vol;
-    //console.log(modulo);
+    console.log('modulo -> ' + modulo);
     return Math.floor(amount / vol) + (amount % vol != 0 ? 1 : 0);
   }
 };
@@ -133,6 +134,7 @@ var get_double_prefix = function(tests) {
 };
 
 var get_multiple_prefix = function(tests) {
+  console.log('in get_multiple_prefix');
   var s = '';
   var panels_list = [];
   var tests_list = [];
@@ -158,7 +160,7 @@ var get_multiple_prefix = function(tests) {
   }
   if (tests_list.length > 0) {
     if (panels_list.length > 0) {
-      s += ' ';
+      s += ' and ';
     }
     if (tests_list.length == 1) {
       s += get_single_prefix(tests_list[0]);
@@ -175,7 +177,7 @@ var get_multiple_prefix = function(tests) {
 };
 
 var format_test_list = function(list) {
-  var s = '';
+  /*var s = '';
   for (var i in list) {
     s += list[i]
     if (i < list.length-1) {
@@ -184,7 +186,8 @@ var format_test_list = function(list) {
     if (i == list.length-2) {
       s += 'and ';
     }
-  }
+  }*/
+  var s = combine(list);
   s += ' tests';
   return s;
 };
@@ -199,20 +202,35 @@ var format_panel_list = function(list) {
     return panels[0] + ' and ' + panels[1] + ' panels';
   }
   else {
-    var s = '';
-    for (var i in panels) {
-      s += panels[i]
-      if (i < panels.length-1) {
+    /*var s = '';
+    for (var p in panels) {
+      s += panels[p]
+      if (p < panels.length-1) {
         s += ', ';
       }
-      if (i == panels.length-2) {
+      if (p == panels.length-2) {
         s += 'and ';
       }
-    }
+    }*/
+    var s = combine(panels);
     s += ' panels';
     return s;
   }
 };
+
+var combine = function(list) {
+  var s = '';
+  for (var i in list) {
+    s += list[i]
+    if (i < list.length-1) {
+      s += ', ';
+    }
+    if (i == list.length-2) {
+      s += 'and ';
+    }
+  }
+  return s;
+}
 
 var test_or_panel_format = function(test) {
   var s = ''
@@ -288,6 +306,9 @@ var test_map = {
     "vitamin b12": "vitamin b12 level",
     "b12": "vitamin b12 level",
     "b12 level": "vitamin b12 level",
+    "vitamin b 12": "vitamin b12 level",
+    "b 12": "vitamin b12 level",
+    "b 12 level": "vitamin b12 level",
     "alcohol": "alcohol panel"
 };
 
