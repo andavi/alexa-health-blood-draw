@@ -21,6 +21,9 @@ var handlers = {
     'LaunchRequest': function() {
         this.emit(':ask', 'Welcome to the Blood Draw skill! Which test would you like to know about?', 'Please specify a test.');
     },
+    'AMAZON.NoIntent': function() {
+        this.emit(':tell', 'Goodbye');
+    },
     'GetTubeIntent': function() {
         var test_data = this.event.request.intent.slots.Test.value.toLowerCase();
         console.log('test_data -> ' + test_data);

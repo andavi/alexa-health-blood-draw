@@ -8,6 +8,10 @@
           "type": "LIST_OF_TESTS"
         }
       ]
+    },
+    {
+      "intent": "AMAZON.NoIntent",
+      "slots": []
     }
   ]
 }
