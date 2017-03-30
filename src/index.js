@@ -48,6 +48,8 @@ var handlers = {
             console.log('tube_vol -> ' + tube_vol);
             s += get_prefix(input_map[t].tests) + get_tubes_output(t, get_num_of_tubes_needed(input_map[t].total, tube_vol));
             console.log(s);
+            s = regularize(s, 0);
+            console.log(s);
           }
           /*s = get_prefix(test);
           var quantity_suffix = data[test]["amount"] == 1 ? ' milliliter' : ' milliliters';
@@ -65,8 +67,25 @@ var handlers = {
           s += get_prefix(tests) + get_tubes_output(tube_color, num_of_tubes_needed);
           console.log(s);
         }
-        this.emit(':tell', s);
+        this.emit(':ask', s + ' Anything else?', 'Are there any other tests you\'d like to know about?');
     }
+};
+
+var regularize = function(output, start) {
+  var i = output.indexOf('.', start);
+  if (i == -1) {
+    return output;
+  }
+  else {
+    if (output[i+1] != ' ') {
+      output = output.slice(0, i+1) + ' ' + output.slice(i+1);
+      start = i+2;
+    }
+    else {
+      start = i+1;
+    }
+    return regularize(output, start);
+  }
 };
 
 var get_tubes_output = function(color, num) {
@@ -159,17 +178,31 @@ var get_multiple_prefix = function(tests) {
     }
   }
   if (tests_list.length > 0) {
+    var second = false;
     if (panels_list.length > 0) {
       s += ' and ';
+      second = true;
     }
     if (tests_list.length == 1) {
-      s += get_single_prefix(tests_list[0]);
+      var p = get_single_prefix(tests_list[0]);
+      if (second) {
+        p = p.toLowerCase();
+      }
+      s += p;
     }
     else if (tests_list.length == 2) {
-      s += get_double_prefix(tests_list);
+      var p = get_double_prefix(tests_list);
+      if (second) {
+        p = p.toLowerCase();
+      }
+      s += p;
     }
     else {
-      s += 'For the ' + format_test_list(tests_list);
+      var p = 'For the ';
+      if (second) {
+        p = p.toLowerCase();
+      }
+      s += p + format_test_list(tests_list);
     }
   }
   s += ', use ';
