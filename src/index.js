@@ -180,6 +180,8 @@ var get_multiple_prefix = function(tests) {
   if (tests_list.length > 0) {
     var second = false;
     if (panels_list.length > 0) {
+      var comma_loc = s.lastIndexOf(',');
+      s = s.slice(0, comma_loc);
       s += ' and ';
       second = true;
     }
@@ -205,7 +207,7 @@ var get_multiple_prefix = function(tests) {
       s += p + format_test_list(tests_list);
     }
   }
-  s += ', use ';
+  //s += ', use ';
   return s;
 };
 
@@ -221,7 +223,7 @@ var format_test_list = function(list) {
     }
   }*/
   var s = combine(list);
-  s += ' tests';
+  s += ' tests, use ';
   return s;
 };
 
@@ -246,7 +248,7 @@ var format_panel_list = function(list) {
       }
     }*/
     var s = combine(panels);
-    s += ' panels';
+    s += ' panels, use ';
     return s;
   }
 };
