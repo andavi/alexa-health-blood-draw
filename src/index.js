@@ -32,8 +32,63 @@ var handlers = {
     'AMAZON.CancelIntent': function() {
         this.emit(':tell', 'Goodbye');
     },
+    'ProcessOneOrTwoIntent': function() {
+        console.log('in ProcessOneOrTwoIntent:');
+        var answer = this.event.request.intent.slots.OneOrTwo.value.toLowerCase();
+        console.log(answer);
+        if (answer == 1) {
+          Object.assign(this.attributes, {
+            "mode": "single_test"
+          });
+          var response = 'What test would you like to know about?';
+          var reprompt = 'Please specify which test you would like to know about.';
+          this.emit(':ask', response, reprompt);
+        }
+        else if (answer == 2) {
+          Object.assign(this.attributes, {
+            "mode": "multiple_tests"
+          });
+          var response = 'How many tests would you like to know about?';
+          var reprompt = 'Please specify how many tests you would like to know about.';
+          this.emit(':ask', response, reprompt);
+        }
+        else {
+          console.log('got answer that wasn\'t 1 or 2 -> ' + answer);
+          var response = 'Sorry, we didn\'t quite get that. Please say either 1 for a single test, or 2 for multiple tests.';
+          var reprompt = 'Please say either 1 for a single test, or 2 for multiple tests.';
+          this.emit(':ask', response, reprompt);
+        }
+    },
     'GetTubeIntent': function() {
+        console.log('in GetTubeIntent');
+        console.log('current attributes: ');
+        console.log(this.attributes);
         var test_data = this.event.request.intent.slots.Test.value.toLowerCase();
+        console.log('test_data -> ' + test_data);
+        var tests = get_tests(test_data);
+        console.log(tests);
+        var s = "";
+        if (this.attributes.hasOwnProperty('mode')) {
+          console.log('has mode property');
+          if (this.attributes.mode == 'single_test') {
+            console.log('mode -> single_test');
+            var test = tests[0];
+            var amount_needed_for_test = data[test]['amount'];
+            var tube_color = data[test]['tube'];
+            var tube_vol = tubes[tube_color]['vol'];
+            var num_of_tubes_needed = get_num_of_tubes_needed(amount_needed_for_test, tube_vol);
+            s += get_prefix(tests) + get_tubes_output(tube_color, num_of_tubes_needed);
+            console.log(s);
+          }
+          else if (this.attributes.mode == 'multiple_tests') {
+            console.log('mode -> multiple_tests');
+          }
+        }
+        else {
+          console.log('no mode property');
+        }
+
+        /*var test_data = this.event.request.intent.slots.Test.value.toLowerCase();
         console.log('test_data -> ' + test_data);
         var tests = get_tests(test_data);
         console.log(tests);
@@ -62,11 +117,6 @@ var handlers = {
             s = regularize(s, 0);
             console.log(s);
           }
-          /*s = get_prefix(test);
-          var quantity_suffix = data[test]["amount"] == 1 ? ' milliliter' : ' milliliters';
-          var info = data[test]["info"].length > 0 ? ' Remember, ' + data[test]["info"] + '.' : "";
-          s += get_prefix(test) + ', use the ' + data[test]["tube"] + ' tube. It needs a quantity of ' + data[test]["amount"] + quantity_suffix + '.' + info;
-          console.log(s);*/
         }
         else {
           console.log('only one test');
@@ -77,7 +127,7 @@ var handlers = {
           var num_of_tubes_needed = get_num_of_tubes_needed(amount_needed_for_test, tube_vol);
           s += get_prefix(tests) + get_tubes_output(tube_color, num_of_tubes_needed);
           console.log(s);
-        }
+        }*/
         this.emit(':ask', s + ' Anything else?', 'Are there any other tests you\'d like to know about?');
     }
 };
