@@ -1,7 +1,9 @@
 'use strict';
 var Alexa = require("alexa-sdk");
 var fs = require("fs");
-var data = JSON.parse(fs.readFileSync("data.json"));
+
+var file_name = 'old_data.json';
+var data = JSON.parse(fs.readFileSync(file_name));
 
 //var APP_ID = "amzn1.ask.skill.b229e3a0-3ac1-4d0d-9c3b-cbf8131bde8d";
 
@@ -19,9 +21,15 @@ exports.handler = function(event, context, callback) {
 
 var handlers = {
     'LaunchRequest': function() {
-        this.emit(':ask', 'Welcome to the Blood Draw skill! Which test would you like to know about?', 'Please specify a test.');
+        //this.emit(':ask', 'Welcome to the Blood Draw skill! Which test would you like to know about?', 'Please specify a test.');
+        var launch_response = 'Welcome to the Blood Draw skill! If you would like to know about a single test, say 1. If you would like to know about multiple tests, say 2.';
+        var launch_reprompt = 'Please say either 1 for a single test, or 2 for multiple tests.';
+        this.emit(':ask', launch_response, launch_reprompt);
     },
     'AMAZON.NoIntent': function() {
+        this.emit(':tell', 'Goodbye');
+    },
+    'AMAZON.CancelIntent': function() {
         this.emit(':tell', 'Goodbye');
     },
     'GetTubeIntent': function() {

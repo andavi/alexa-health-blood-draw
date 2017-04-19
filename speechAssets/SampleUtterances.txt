@@ -10,3 +10,6 @@ GetTubeIntent {Test} tube
 GetTubeIntent tube for {Test}
 GetTubeIntent tube for the {Test} test
 GetTubeIntent {Test}
+GetTubeIntent {Test} and {Test}
+GetTubeIntent {Test} plus {Test}
+ProcessOneOrTwoIntent {OneOrTwo}

@@ -10,6 +10,15 @@
       ]
     },
     {
+      "intent": "ProcessOneOrTwoIntent",
+      "slots": [
+        {
+          "name": "OneOrTwo",
+          "type": "AMAZON.NUMBER"
+        }
+      ]
+    },
+    {
       "intent": "AMAZON.NoIntent",
       "slots": []
     }
