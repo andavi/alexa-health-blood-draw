@@ -32,31 +32,41 @@ var handlers = {
     'AMAZON.CancelIntent': function() {
         this.emit(':tell', 'Goodbye');
     },
-    'ProcessOneOrTwoIntent': function() {
-        console.log('in ProcessOneOrTwoIntent:');
-        var answer = this.event.request.intent.slots.OneOrTwo.value.toLowerCase();
+    'ProcessNumberIntent': function() {
+        console.log('in ProcessNumberIntent:');
+        var answer = this.event.request.intent.slots.Number.value.toLowerCase();
         console.log(answer);
-        if (answer == 1) {
-          Object.assign(this.attributes, {
-            "mode": "single_test"
-          });
-          var response = 'What test would you like to know about?';
-          var reprompt = 'Please specify which test you would like to know about.';
-          this.emit(':ask', response, reprompt);
-        }
-        else if (answer == 2) {
-          Object.assign(this.attributes, {
-            "mode": "multiple_tests"
-          });
-          var response = 'How many tests would you like to know about?';
-          var reprompt = 'Please specify how many tests you would like to know about.';
-          this.emit(':ask', response, reprompt);
+        if (this.attributes.hasOwnProperty('mode') && this.attributes.mode == 'multiple_tests') {
+          console.log('got number of multiple tests');
+          this.attributes['number_of_tests'] = answer;
+          console.log('attributes -> ' + attributes);
+          this.emit(':ask', 'What\'s the first test?', 'Please specify the first test.');
         }
         else {
-          console.log('got answer that wasn\'t 1 or 2 -> ' + answer);
-          var response = 'Sorry, we didn\'t quite get that. Please say either 1 for a single test, or 2 for multiple tests.';
-          var reprompt = 'Please say either 1 for a single test, or 2 for multiple tests.';
-          this.emit(':ask', response, reprompt);
+          if (answer == 1) {
+            /*Object.assign(this.attributes, {
+              "mode": "single_test"
+            });*/
+            this.attributes['mode'] = 'single_test';
+            var response = 'What test would you like to know about?';
+            var reprompt = 'Please specify which test you would like to know about.';
+            this.emit(':ask', response, reprompt);
+          }
+          else if (answer == 2) {
+            /*Object.assign(this.attributes, {
+              "mode": "multiple_tests"
+            });*/
+            this.attributes['mode'] = 'multiple_tests';
+            var response = 'How many tests would you like to know about?';
+            var reprompt = 'Please specify how many tests you would like to know about.';
+            this.emit(':ask', response, reprompt);
+          }
+          else {
+            console.log('got answer that wasn\'t 1 or 2 -> ' + answer);
+            var response = 'Sorry, we didn\'t quite get that. Please say either 1 for a single test, or 2 for multiple tests.';
+            var reprompt = 'Please say either 1 for a single test, or 2 for multiple tests.';
+            this.emit(':ask', response, reprompt);
+          }
         }
     },
     'GetTubeIntent': function() {
@@ -65,14 +75,14 @@ var handlers = {
         console.log(this.attributes);
         var test_data = this.event.request.intent.slots.Test.value.toLowerCase();
         console.log('test_data -> ' + test_data);
-        var tests = get_tests(test_data);
+        var current_test = get_tests(test_data);
         console.log(tests);
         var s = "";
         if (this.attributes.hasOwnProperty('mode')) {
           console.log('has mode property');
           if (this.attributes.mode == 'single_test') {
             console.log('mode -> single_test');
-            var test = tests[0];
+            var test = current_test[0];
             var amount_needed_for_test = data[test]['amount'];
             var tube_color = data[test]['tube'];
             var tube_vol = tubes[tube_color]['vol'];
@@ -82,6 +92,16 @@ var handlers = {
           }
           else if (this.attributes.mode == 'multiple_tests') {
             console.log('mode -> multiple_tests');
+            if (this.attributes.hasOwnProperty('tests')) {
+              console.log('tests -> ' + this.attributes.tests);
+              console.log('adding ' + current_test[0] + ' to attributes');
+              this.attributes.tests.push(current_test[0]);
+              console.log(this.attributes.tests);
+            }
+            else {
+              console.log('no tests property');
+              this.attributes['tests'] = [current_test[0]];
+            }
           }
         }
         else {

@@ -10,10 +10,10 @@
       ]
     },
     {
-      "intent": "ProcessOneOrTwoIntent",
+      "intent": "ProcessNumberIntent",
       "slots": [
         {
-          "name": "OneOrTwo",
+          "name": "Number",
           "type": "AMAZON.NUMBER"
         }
       ]
