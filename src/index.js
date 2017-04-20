@@ -1,6 +1,7 @@
 'use strict';
 var Alexa = require("alexa-sdk");
 var fs = require("fs");
+var ordinal = require('ordinal').english;
 
 var file_name = 'old_data.json';
 var data = JSON.parse(fs.readFileSync(file_name));
@@ -33,29 +34,19 @@ var handlers = {
         this.emit(':tell', 'Goodbye');
     },
     'ProcessNumberIntent': function() {
-        console.log('in ProcessNumberIntent:');
         var answer = this.event.request.intent.slots.Number.value.toLowerCase();
-        console.log(answer);
         if (this.attributes.hasOwnProperty('mode') && this.attributes.mode == 'multiple_tests') {
-          console.log('got number of multiple tests');
           this.attributes['number_of_tests'] = answer;
-          console.log('attributes -> ' + attributes);
           this.emit(':ask', 'What\'s the first test?', 'Please specify the first test.');
         }
         else {
           if (answer == 1) {
-            /*Object.assign(this.attributes, {
-              "mode": "single_test"
-            });*/
             this.attributes['mode'] = 'single_test';
             var response = 'What test would you like to know about?';
             var reprompt = 'Please specify which test you would like to know about.';
             this.emit(':ask', response, reprompt);
           }
           else if (answer == 2) {
-            /*Object.assign(this.attributes, {
-              "mode": "multiple_tests"
-            });*/
             this.attributes['mode'] = 'multiple_tests';
             var response = 'How many tests would you like to know about?';
             var reprompt = 'Please specify how many tests you would like to know about.';
@@ -76,31 +67,37 @@ var handlers = {
         var test_data = this.event.request.intent.slots.Test.value.toLowerCase();
         console.log('test_data -> ' + test_data);
         var current_test = get_tests(test_data);
-        console.log(tests);
+        console.log(current_test);
         var s = "";
         if (this.attributes.hasOwnProperty('mode')) {
-          console.log('has mode property');
           if (this.attributes.mode == 'single_test') {
-            console.log('mode -> single_test');
             var test = current_test[0];
             var amount_needed_for_test = data[test]['amount'];
             var tube_color = data[test]['tube'];
             var tube_vol = tubes[tube_color]['vol'];
             var num_of_tubes_needed = get_num_of_tubes_needed(amount_needed_for_test, tube_vol);
-            s += get_prefix(tests) + get_tubes_output(tube_color, num_of_tubes_needed);
+            s += get_prefix(current_test) + get_tubes_output(tube_color, num_of_tubes_needed);
             console.log(s);
+            this.emit(':ask', s + ' Anything else?', 'Anything else?');
           }
           else if (this.attributes.mode == 'multiple_tests') {
-            console.log('mode -> multiple_tests');
             if (this.attributes.hasOwnProperty('tests')) {
-              console.log('tests -> ' + this.attributes.tests);
-              console.log('adding ' + current_test[0] + ' to attributes');
               this.attributes.tests.push(current_test[0]);
               console.log(this.attributes.tests);
             }
             else {
-              console.log('no tests property');
               this.attributes['tests'] = [current_test[0]];
+            }
+            if (this.attributes.tests.length == this.attributes.number_of_tests) {
+              console.log('got em all!');
+              s = get_multiple_tests_response(this.attributes.tests);
+              this.emit(':ask', s + ' Anything else?', 'well?');
+            }
+            else {
+              var response = 'What\'s the ' + ordinal(this.attributes.tests.length + 1) + ' test?';
+              console.log(response);
+              var reprompt = 'Please specify what the ' + ordinal(this.attributes.tests.length + 1) + ' test is.';
+              this.emit(':ask', response, reprompt);
             }
           }
         }
@@ -148,8 +145,37 @@ var handlers = {
           s += get_prefix(tests) + get_tubes_output(tube_color, num_of_tubes_needed);
           console.log(s);
         }*/
-        this.emit(':ask', s + ' Anything else?', 'Are there any other tests you\'d like to know about?');
+        //this.emit(':ask', s + ' Anything else?', 'Are there any other tests you\'d like to know about?');
     }
+};
+
+var get_multiple_tests_response = function(tests) {
+  console.log(tests);
+  var s = "";
+  var input_map = {};
+  for (var i = 0; i < tests.length; i++) {
+      var test = tests[i];
+      var amount_needed_for_test = data[test]['amount'];
+      var tube_color = data[test]['tube'];
+      if (input_map.hasOwnProperty(tube_color)) {
+        input_map[tube_color].tests.push(test);
+        input_map[tube_color].total += amount_needed_for_test;
+      }
+      else {
+        input_map[tube_color] = {tests: [test], total: amount_needed_for_test};
+      }
+  }
+  console.log('input_map -> ' + JSON.stringify(input_map));
+  for (var t in input_map) {
+    console.log(t.toUpperCase() + '!!!');
+    var tube_vol = tubes[t]['vol'];
+    console.log('tube_vol -> ' + tube_vol);
+    s += get_prefix(input_map[t].tests) + get_tubes_output(t, get_num_of_tubes_needed(input_map[t].total, tube_vol));
+    console.log(s);
+    s = regularize(s, 0);
+    console.log(s);
+  }
+  return s;
 };
 
 var regularize = function(output, start) {
