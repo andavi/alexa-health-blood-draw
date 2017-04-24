@@ -3,7 +3,8 @@ var Alexa = require("alexa-sdk");
 var fs = require("fs");
 var ordinal = require('ordinal').english;
 
-var file_name = 'old_data.json';
+//var file_name = 'old_data.json';
+var file_name = 'data.json';
 var data = JSON.parse(fs.readFileSync(file_name));
 
 //var APP_ID = "amzn1.ask.skill.b229e3a0-3ac1-4d0d-9c3b-cbf8131bde8d";
@@ -35,9 +36,29 @@ var handlers = {
     },
     'ProcessNumberIntent': function() {
         var answer = this.event.request.intent.slots.Number.value.toLowerCase();
+        console.log('in ProcessNumberIntent');
+        console.log('answer -> ' + answer);
         if (this.attributes.hasOwnProperty('mode') && this.attributes.mode == 'multiple_tests') {
-          this.attributes['number_of_tests'] = answer;
-          this.emit(':ask', 'What\'s the first test?', 'Please specify the first test.');
+          // test if you can get a non number here
+          if (answer == '?') {
+            console.log('found a question mark');
+            var response = 'How many tests would you like to know about? Please say a number between 1 and 8.';
+            var reprompt = 'Please specify how many tests you would like to know about.';
+            this.emit(':ask', response, reprompt);
+          }
+          else {
+            answer = parseInt(answer);
+            if (answer >= 1 && answer <= 8) {
+              console.log('answer is between 1 and 8');
+              this.attributes['number_of_tests'] = answer;
+              this.emit(':ask', 'What\'s the first test?', 'Please specify the first test.');
+            }
+            else {
+              var response = 'How many tests would you like to know about? Please say a number between 1 and 8.';
+              var reprompt = 'Please specify how many tests you would like to know about.';
+              this.emit(':ask', response, reprompt);
+            }
+          }
         }
         else {
           if (answer == 1) {
@@ -72,13 +93,19 @@ var handlers = {
         if (this.attributes.hasOwnProperty('mode')) {
           if (this.attributes.mode == 'single_test') {
             var test = current_test[0];
-            var amount_needed_for_test = data[test]['amount'];
-            var tube_color = data[test]['tube'];
+            console.log('test -> ' + test);
+            //var amount_needed_for_test = data[test]['amount'];
+            //var tube_color = data[test]['tube'];
+            //var tube_vol = tubes[tube_color]['vol'];
+            var specimen_string = data[camelize(test)]['data']['Specimen'];
+            console.log('specimen_string -> ' + specimen_string);
+            var amount_needed_for_test = get_amount_needed(specimen_string);
+            var tube_color = get_tube_color(specimen_string);
             var tube_vol = tubes[tube_color]['vol'];
             var num_of_tubes_needed = get_num_of_tubes_needed(amount_needed_for_test, tube_vol);
             s += get_prefix(current_test) + get_tubes_output(tube_color, num_of_tubes_needed);
             console.log(s);
-            this.emit(':ask', s + ' Anything else?', 'Anything else?');
+            this.emit(':askWithCard', s + ' Anything else?', 'Anything else?', 'Blood Draw', s + '\nLink: ' + data[camelize(test)]['link']);
           }
           else if (this.attributes.mode == 'multiple_tests') {
             if (this.attributes.hasOwnProperty('tests')) {
@@ -104,50 +131,61 @@ var handlers = {
         else {
           console.log('no mode property');
         }
-
-        /*var test_data = this.event.request.intent.slots.Test.value.toLowerCase();
-        console.log('test_data -> ' + test_data);
-        var tests = get_tests(test_data);
-        console.log(tests);
-        var s = "";
-        if (tests.length > 1) {
-          var input_map = {};
-          for (var i = 0; i < tests.length; i++) {
-              var test = tests[i];
-              var amount_needed_for_test = data[test]['amount'];
-              var tube_color = data[test]['tube'];
-              if (input_map.hasOwnProperty(tube_color)) {
-                input_map[tube_color].tests.push(test);
-                input_map[tube_color].total += amount_needed_for_test;
-              }
-              else {
-                input_map[tube_color] = {tests: [test], total: amount_needed_for_test};
-              }
-          }
-          console.log('input_map -> ' + JSON.stringify(input_map));
-          for (var t in input_map) {
-            console.log(t.toUpperCase() + '!!!');
-            var tube_vol = tubes[t]['vol'];
-            console.log('tube_vol -> ' + tube_vol);
-            s += get_prefix(input_map[t].tests) + get_tubes_output(t, get_num_of_tubes_needed(input_map[t].total, tube_vol));
-            console.log(s);
-            s = regularize(s, 0);
-            console.log(s);
-          }
-        }
-        else {
-          console.log('only one test');
-          var test = tests[0];
-          var amount_needed_for_test = data[test]['amount'];
-          var tube_color = data[test]['tube'];
-          var tube_vol = tubes[tube_color]['vol'];
-          var num_of_tubes_needed = get_num_of_tubes_needed(amount_needed_for_test, tube_vol);
-          s += get_prefix(tests) + get_tubes_output(tube_color, num_of_tubes_needed);
-          console.log(s);
-        }*/
-        //this.emit(':ask', s + ' Anything else?', 'Are there any other tests you\'d like to know about?');
     }
 };
+
+var camelize = function(test) {
+  console.log('in camelize');
+  var words = test.split(' ');
+  for (var i=0; i<words.length; i++) {
+    words[i] = words[i].slice(0, 1).toUpperCase() + words[i].slice(1);
+  }
+  var camel_test = words.join(' ');
+  console.log('camel_test -> ' + camel_test);
+  return camel_test;
+};
+
+var get_amount_needed = function(specimen) {
+  console.log('in get_amount_needed');
+  var words = specimen.split(' ');
+  for (var i=0; i<words.length; i++) {
+    console.log(i, words[i]);
+    if (words[i].toLowerCase() == 'ml') {
+      console.log('found an ml');
+      if (i != 0) {
+        return parseInt(words[i-1]);
+      }
+    }
+  }
+};
+
+var get_tube_color = function(specimen) {
+  console.log('in get_tube_color');
+  var words_space = specimen.toLowerCase().split(' ');
+  var words = [];
+  for (var i=0; i<words_space.length; i++) {
+    var words_slash = words_space[i].split('/');
+    for (var j=0; j<words_slash.length; j++) {
+      words.push(words_slash[j]);
+    }
+  }
+  console.log('words -> ' + words);
+  var colors = ['royal blue', 'red', 'light blue', 'gold', 'green', 'tan', 'yellow', 'pink', 'pearl', 'lavender'];
+  for (var i=0; i<words.length; i++) {
+    /*if (colors.includes(words[i])) {
+      return words[i];
+    }*/
+    var matches = colors.filter(function(color) {
+      return color == words[i];
+    });
+    if (matches.length == 1) {
+      return matches[0];
+    }
+    else if ((words[i] == 'royal' || words[i] == 'light') && words[i+1] == 'blue') {
+      return words[i] + ' ' + words[i+1];
+    }
+  }
+}
 
 var get_multiple_tests_response = function(tests) {
   console.log(tests);
@@ -155,8 +193,12 @@ var get_multiple_tests_response = function(tests) {
   var input_map = {};
   for (var i = 0; i < tests.length; i++) {
       var test = tests[i];
-      var amount_needed_for_test = data[test]['amount'];
-      var tube_color = data[test]['tube'];
+      //var amount_needed_for_test = data[test]['amount'];
+      //var tube_color = data[test]['tube'];
+      var specimen_string = data[camelize(test)]['data']['Specimen'];
+      console.log('specimen_string -> ' + specimen_string);
+      var amount_needed_for_test = get_amount_needed(specimen_string);
+      var tube_color = get_tube_color(specimen_string);
       if (input_map.hasOwnProperty(tube_color)) {
         input_map[tube_color].tests.push(test);
         input_map[tube_color].total += amount_needed_for_test;
@@ -397,10 +439,13 @@ var get_tests = function(test) {
         } else {
             current = words[i];
         }
-        if (data.hasOwnProperty(current)) {
+        console.log('current -> ' + current);
+        if (data.hasOwnProperty(camelize(current))) {
+            console.log('data has property');
             tests.push(current);
             current = "";
         } else if (test_map.hasOwnProperty(current)) {
+            console.log('test_map has property');
             tests.push(test_map[current]);
             current = "";
         }
@@ -439,8 +484,8 @@ var get_words = function(test) {
 var test_map = {
     "cbc": "complete blood count",
     "bmp": "basic metabolic panel",
-    "lipid": "lipid panel",
-    "lipids": "lipid panel",
+    "lipid": "lipids panel",
+    "lipids": "lipids panel",
     "hepatic function": "hepatic function panel",
     "liver function panel": "hepatic function panel",
     "liver function": "hepatic function panel",

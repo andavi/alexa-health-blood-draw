@@ -1,4 +1,5 @@
 {
+
   "Acetaminophen": {
     "link": "http://www.uncmedicalcenter.org/mclendon-clinical-laboratories/available-tests/acetaminophen/",
     "data": {
@@ -1022,7 +1023,7 @@
       "Comments": "\r\n Please call Lab 984-874-1825 with questions. This test is ordered by the Hematopathology service.\r\nAdditional information:\r\n\r\n\r\nLaboratory Tests for B- and T-cell Clonality based on Immunoglobulin and T-Cell Receptor Gene Rearrangement \r\n\r\n\r\nMolecular Genetics Test Request form\r\n\r\n\r\nDirection for collection and mailing of specimens for Molecular Genetics Testing\r\n\r\n\r\n"
     }
   },
-  "B12 (Vitamin B12)": {
+  "Vitamin B12 Level": {
     "link": "http://www.uncmedicalcenter.org/mclendon-clinical-laboratories/available-tests/b12-vitamin-b12/",
     "data": {
       "Test ID": "LAB67",
@@ -1278,7 +1279,7 @@
       "Comments": "\r\nAdditional information: \r\n\r\n\r\nBK Viral Load, Blood PCR\r\n\r\n\r\nMolecular Genetics Test Request form\r\n\r\n\r\nDirections for collecting and mailing specimens for Molecular Genetics Testing\r\n\r\n\r\n"
     }
   },
-  "BMP: Basic Metabolic Panel": {
+  "Basic Metabolic Panel": {
     "link": "http://www.uncmedicalcenter.org/mclendon-clinical-laboratories/available-tests/bmp-basic-metabolic-panel/",
     "data": {
       "Test ID": "LAB15",
@@ -1769,7 +1770,7 @@
       "Comments": "Call Referral Testing at (984)974-1414 for special instructions."
     }
   },
-  "CBC (Complete Blood Count)": {
+  "Complete Blood Count": {
     "link": "http://www.uncmedicalcenter.org/mclendon-clinical-laboratories/available-tests/cbc-complete-blood-count/",
     "data": {
       "Test ID": "LAB294",
@@ -4702,7 +4703,7 @@
       "Comment": "Specimens submitted for type specific HSV-1 and HSV-2 antibody are assayed with a qualitative   chemiluminescent immunoassay that detects type specific IgG antibodies.  The tests are indicated as an aid in the diagnosis of HSV-1 and HSV -2 infection.  Positive results provide a presumptive diagnosis of infection.  Results are reported as positive, negative or equivocal.  Equivocal results should be followed up by testing a new serum sample collected at least 4 to 6 weeks after the first equivocal sample."
     }
   },
-  "HFP: Hepatic Function Panel": {
+  "Hepatic Function Panel": {
     "link": "http://www.uncmedicalcenter.org/mclendon-clinical-laboratories/available-tests/hfp-hepatic-function-panel/",
     "data": {
       "est ID": "LAB20",
@@ -5981,6 +5982,24 @@
       "11yr-<15yr": "10-180",
       "15-18yr": "10-220",
       ">18yr": "44-232"
+    }
+  },
+  "Lipids Panel": {
+    "link": "http://www.uncmedicalcenter.org/mclendon-clinical-laboratories/available-tests/lipids-panel/",
+    "data": {
+      "Test ID": "LAB18",
+      "EPIC Order ": "LIPID PANEL",
+      "CPT Code(s)": "80061",
+      "Group/Individual Test": "Group",
+      "Laboratory": "Core",
+      "Tube Station": "30",
+      "Specimen": "2 mL blood/Serum Separator Tube/Gold Top/Red Top also acceptable; See important comments",
+      "Stability": "Unspun: 6 hours\r\nRoom temperature: 4 hours\r\nRefrigerator: 3 days\r\nFrozen: 3 weeks",
+      "Availability": "24 hrs/day",
+      "Turnaround Time": "2 hours",
+      "Reference Range": "See Individual Tests",
+      "Internal Reference Testing Specimen Handling Instructions:": "Centrifuge, aliquot, refrigerate",
+      "Comments": "Includes:Cholesterol, HDL Cholesterol, Triglycerides, and calculated LDL.  If Triglycerides >400mg/dl, direct LDL will be reflexed."
     }
   },
   "Lipoprotein A": {
