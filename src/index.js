@@ -35,6 +35,7 @@ var handlers = {
         this.emit(':tell', 'Goodbye');
     },
     'ProcessNumberIntent': function() {
+      try {
         var answer = this.event.request.intent.slots.Number.value.toLowerCase();
         console.log('in ProcessNumberIntent');
         console.log('answer -> ' + answer);
@@ -75,13 +76,20 @@ var handlers = {
           }
           else {
             console.log('got answer that wasn\'t 1 or 2 -> ' + answer);
-            var response = 'Sorry, we didn\'t quite get that. Please say either 1 for a single test, or 2 for multiple tests.';
+            var response = 'Sorry, I didn\'t quite get that. Please say either 1 for a single test, or 2 for multiple tests.';
             var reprompt = 'Please say either 1 for a single test, or 2 for multiple tests.';
             this.emit(':ask', response, reprompt);
           }
         }
+      }
+      catch (e) {
+        var response = 'Sorry, something went wrong. To start over, please say either 1 for a single test, or 2 for multiple tests.';
+        var reprompt = 'Please say either 1 for a single test, or 2 for multiple tests.';
+        this.emit(':ask', response, reprompt);
+      }
     },
     'GetTubeIntent': function() {
+      try {
         console.log('in GetTubeIntent');
         console.log('current attributes: ');
         console.log(this.attributes);
@@ -131,7 +139,14 @@ var handlers = {
         else {
           console.log('no mode property');
         }
+      }
+      catch (e) {
+        var response = 'Sorry, something went wrong. To start over, please say either 1 for a single test, or 2 for multiple tests.';
+        var reprompt = 'Please say either 1 for a single test, or 2 for multiple tests.';
+        this.emit(':ask', response, reprompt);
+      }
     }
+
 };
 
 var camelize = function(test) {
@@ -496,7 +511,8 @@ var test_map = {
     "vitamin b 12": "vitamin b12 level",
     "b 12": "vitamin b12 level",
     "b 12 level": "vitamin b12 level",
-    "alcohol": "alcohol panel"
+    "alcohol": "alcohol panel",
+    "aluminum": "aluminum level"
 };
 
 var tubes = {

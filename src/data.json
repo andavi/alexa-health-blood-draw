@@ -447,7 +447,7 @@
       "Comments": "\r\nSamples must be kept at Room Temperature. Specimen must be collected Monday-Thursday between 10:00 am and 2:00 pm and received in laboratory by 3:00 pm. \r\n"
     }
   },
-  "Aluminum, Serum": {
+  "Aluminum Level": {
     "link": "http://www.uncmedicalcenter.org/mclendon-clinical-laboratories/available-tests/aluminum-serum/",
     "data": {
       "Test ID": "LAB665",
@@ -553,7 +553,7 @@
       "Comments": "Sample must be processed within 2 hours of collection."
     }
   },
-  "Ammonia (NH3)": {
+  "Ammonia": {
     "link": "http://www.uncmedicalcenter.org/mclendon-clinical-laboratories/available-tests/ammonia-nh3/",
     "data": {
       "Test ID": "LAB47",
