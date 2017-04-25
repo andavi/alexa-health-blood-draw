@@ -28,6 +28,15 @@ var handlers = {
         var launch_reprompt = 'Please say either 1 for a single test, or 2 for multiple tests.';
         this.emit(':ask', launch_response, launch_reprompt);
     },
+    'AMAZON.YesIntent': function() {
+        console.log('caught a yes');
+        console.log('attributes -> ' + JSON.stringify(this.attributes));
+        this.attributes = {};
+        console.log('attributes after -> ' + JSON.stringify(this.attributes));
+        var response = 'Okay. For a single test, say 1. For multiple tests, say 2.';
+        var reprompt = 'Please specify either 1 for a single test, or 2 for multiple tests';
+        this.emit(':ask', response, reprompt);
+    },
     'AMAZON.NoIntent': function() {
         this.emit(':tell', 'Goodbye');
     },

@@ -21,6 +21,10 @@
     {
       "intent": "AMAZON.NoIntent",
       "slots": []
+    },
+    {
+      "intent": "AMAZON.YesIntent",
+      "slots": []
     }
   ]
 }
