@@ -16,6 +16,7 @@ var data = JSON.parse(fs.readFileSync(file_name));
 */
 
 exports.handler = function(event, context, callback) {
+    //event.session['attributes']['flag'] = 'true';
     var alexa = Alexa.handler(event, context);
     alexa.registerHandlers(handlers);
     alexa.execute();
@@ -41,6 +42,9 @@ var handlers = {
         this.emit(':tell', 'Goodbye');
     },
     'AMAZON.CancelIntent': function() {
+        this.emit(':tell', 'Goodbye');
+    },
+    'AMAZON.StopIntent': function() {
         this.emit(':tell', 'Goodbye');
     },
     'ProcessNumberIntent': function() {
@@ -106,47 +110,55 @@ var handlers = {
         console.log('test_data -> ' + test_data);
         var current_test = get_tests(test_data);
         console.log(current_test);
-        var s = "";
-        if (this.attributes.hasOwnProperty('mode')) {
-          if (this.attributes.mode == 'single_test') {
-            var test = current_test[0];
-            console.log('test -> ' + test);
-            //var amount_needed_for_test = data[test]['amount'];
-            //var tube_color = data[test]['tube'];
-            //var tube_vol = tubes[tube_color]['vol'];
-            var specimen_string = data[camelize(test)]['data']['Specimen'];
-            console.log('specimen_string -> ' + specimen_string);
-            var amount_needed_for_test = get_amount_needed(specimen_string);
-            var tube_color = get_tube_color(specimen_string);
-            var tube_vol = tubes[tube_color]['vol'];
-            var num_of_tubes_needed = get_num_of_tubes_needed(amount_needed_for_test, tube_vol);
-            s += get_prefix(current_test) + get_tubes_output(tube_color, num_of_tubes_needed);
-            console.log(s);
-            this.emit(':askWithCard', s + ' Anything else?', 'Anything else?', 'Blood Draw', s + '\nLink: ' + data[camelize(test)]['link']);
-          }
-          else if (this.attributes.mode == 'multiple_tests') {
-            if (this.attributes.hasOwnProperty('tests')) {
-              this.attributes.tests.push(current_test[0]);
-              console.log(this.attributes.tests);
-            }
-            else {
-              this.attributes['tests'] = [current_test[0]];
-            }
-            if (this.attributes.tests.length == this.attributes.number_of_tests) {
-              console.log('got em all!');
-              s = get_multiple_tests_response(this.attributes.tests);
-              this.emit(':ask', s + ' Anything else?', 'well?');
-            }
-            else {
-              var response = 'What\'s the ' + ordinal(this.attributes.tests.length + 1) + ' test?';
-              console.log(response);
-              var reprompt = 'Please specify what the ' + ordinal(this.attributes.tests.length + 1) + ' test is.';
-              this.emit(':ask', response, reprompt);
-            }
-          }
+        if (current_test.length < 1) {
+          var s = 'Sorry, we couldn\'t find ' + test_data + ' in our records.';
+          this.emit(':tellWithCard', s, 'Blood Draw', s);
         }
         else {
-          console.log('no mode property');
+          var s = "";
+          if (this.attributes.hasOwnProperty('mode')) {
+            if (this.attributes.mode == 'single_test') {
+              console.log('single test mode');
+              var test = current_test[0];
+              console.log('test -> ' + test);
+              //var amount_needed_for_test = data[test]['amount'];
+              //var tube_color = data[test]['tube'];
+              //var tube_vol = tubes[tube_color]['vol'];
+              var specimen_string = data[camelize(test)]['data']['Specimen'];
+              console.log('specimen_string -> ' + specimen_string);
+              var amount_needed_for_test = get_amount_needed(specimen_string);
+              var tube_color = get_tube_color(specimen_string);
+              var tube_vol = tubes[tube_color]['vol'];
+              var num_of_tubes_needed = get_num_of_tubes_needed(amount_needed_for_test, tube_vol);
+              s += get_prefix(current_test) + get_tubes_output(tube_color, num_of_tubes_needed);
+              console.log(s);
+              this.emit(':askWithCard', s + ' Anything else?', 'Anything else?', 'Blood Draw', s + '\nLink: ' + data[camelize(test)]['link']);
+            }
+            else if (this.attributes.mode == 'multiple_tests') {
+              console.log('multiple test mode');
+              if (this.attributes.hasOwnProperty('tests')) {
+                this.attributes.tests.push(current_test[0]);
+                console.log(this.attributes.tests);
+              }
+              else {
+                this.attributes['tests'] = [current_test[0]];
+              }
+              if (this.attributes.tests.length == this.attributes.number_of_tests) {
+                console.log('got em all!');
+                s = get_multiple_tests_response(this.attributes.tests);
+                this.emit(':ask', s + ' Anything else?', 'well?');
+              }
+              else {
+                var response = 'What\'s the ' + ordinal(this.attributes.tests.length + 1) + ' test?';
+                console.log(response);
+                var reprompt = 'Please specify what the ' + ordinal(this.attributes.tests.length + 1) + ' test is.';
+                this.emit(':ask', response, reprompt);
+              }
+            }
+          }
+          else {
+            console.log('no mode property');
+          }
         }
       }
       catch (e) {
@@ -521,7 +533,15 @@ var test_map = {
     "b 12": "vitamin b12 level",
     "b 12 level": "vitamin b12 level",
     "alcohol": "alcohol panel",
-    "aluminum": "aluminum level"
+    "aluminum": "aluminum level",
+    "ama": "antimitochondrial antibody",
+    "elavil": "amitriptyline nortriptyline level",
+    "ace": "angiotensin converting enzyme",
+    "amylase": "amylase level",
+    "anca": "anti neutrophilic cytoplasmic antibody",
+    "ana": "anti nuclear antibody",
+    "arixtra": "arixtra level",
+    "ast": "aspartate aminotransferase"
 };
 
 var tubes = {
