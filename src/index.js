@@ -15,8 +15,11 @@ var data = JSON.parse(fs.readFileSync(file_name));
     - node_modules/.bin/mocha
 */
 
+var test_mode = false;
+
 exports.handler = function(event, context, callback) {
     //event.session['attributes']['flag'] = 'true';
+
     var alexa = Alexa.handler(event, context);
     alexa.registerHandlers(handlers);
     alexa.execute();
@@ -24,7 +27,6 @@ exports.handler = function(event, context, callback) {
 
 var handlers = {
     'LaunchRequest': function() {
-        //this.emit(':ask', 'Welcome to the Blood Draw skill! Which test would you like to know about?', 'Please specify a test.');
         var launch_response = 'Welcome to the Blood Draw skill! If you would like to know about a single test, say 1. If you would like to know about multiple tests, say 2.';
         var launch_reprompt = 'Please say either 1 for a single test, or 2 for multiple tests.';
         this.emit(':ask', launch_response, launch_reprompt);
@@ -39,12 +41,15 @@ var handlers = {
         this.emit(':ask', response, reprompt);
     },
     'AMAZON.NoIntent': function() {
+        console.log('caught a no');
         this.emit(':tell', 'Goodbye');
     },
     'AMAZON.CancelIntent': function() {
+        console.log('caught a cancel');
         this.emit(':tell', 'Goodbye');
     },
     'AMAZON.StopIntent': function() {
+        console.log('caught a stop');
         this.emit(':tell', 'Goodbye');
     },
     'ProcessNumberIntent': function() {
@@ -52,50 +57,18 @@ var handlers = {
         var answer = this.event.request.intent.slots.Number.value.toLowerCase();
         console.log('in ProcessNumberIntent');
         console.log('answer -> ' + answer);
-        if (this.attributes.hasOwnProperty('mode') && this.attributes.mode == 'multiple_tests') {
-          // test if you can get a non number here
-          if (answer == '?') {
-            console.log('found a question mark');
-            var response = 'How many tests would you like to know about? Please say a number between 1 and 8.';
-            var reprompt = 'Please specify how many tests you would like to know about.';
-            this.emit(':ask', response, reprompt);
-          }
-          else {
-            answer = parseInt(answer);
-            if (answer >= 1 && answer <= 8) {
-              console.log('answer is between 1 and 8');
-              this.attributes['number_of_tests'] = answer;
-              this.emit(':ask', 'What\'s the first test?', 'Please specify the first test.');
-            }
-            else {
-              var response = 'How many tests would you like to know about? Please say a number between 1 and 8.';
-              var reprompt = 'Please specify how many tests you would like to know about.';
-              this.emit(':ask', response, reprompt);
-            }
-          }
+        var response = process_number(answer, this.attributes);
+        if (response.length != 2) {
+          var s = 'response length not 2';
+          console.log(s);
+          throw s;
         }
         else {
-          if (answer == 1) {
-            this.attributes['mode'] = 'single_test';
-            var response = 'What test would you like to know about?';
-            var reprompt = 'Please specify which test you would like to know about.';
-            this.emit(':ask', response, reprompt);
-          }
-          else if (answer == 2) {
-            this.attributes['mode'] = 'multiple_tests';
-            var response = 'How many tests would you like to know about?';
-            var reprompt = 'Please specify how many tests you would like to know about.';
-            this.emit(':ask', response, reprompt);
-          }
-          else {
-            console.log('got answer that wasn\'t 1 or 2 -> ' + answer);
-            var response = 'Sorry, I didn\'t quite get that. Please say either 1 for a single test, or 2 for multiple tests.';
-            var reprompt = 'Please say either 1 for a single test, or 2 for multiple tests.';
-            this.emit(':ask', response, reprompt);
-          }
+          this.emit(':ask', response[0], response[1]);
         }
       }
       catch (e) {
+        console.log('caught error in ProcessNumberIntent -> ' + e);
         var response = 'Sorry, something went wrong. To start over, please say either 1 for a single test, or 2 for multiple tests.';
         var reprompt = 'Please say either 1 for a single test, or 2 for multiple tests.';
         this.emit(':ask', response, reprompt);
@@ -104,72 +77,142 @@ var handlers = {
     'GetTubeIntent': function() {
       try {
         console.log('in GetTubeIntent');
-        console.log('current attributes: ');
-        console.log(this.attributes);
+        console.log('current attributes -> ' + this.attributes);
         var test_data = this.event.request.intent.slots.Test.value.toLowerCase();
         console.log('test_data -> ' + test_data);
-        var current_test = get_tests(test_data);
-        console.log(current_test);
-        if (current_test.length < 1) {
-          var s = 'Sorry, we couldn\'t find ' + test_data + ' in our records.';
-          this.emit(':tellWithCard', s, 'Blood Draw', s);
-        }
-        else {
-          var s = "";
-          if (this.attributes.hasOwnProperty('mode')) {
-            if (this.attributes.mode == 'single_test') {
-              console.log('single test mode');
-              var test = current_test[0];
-              console.log('test -> ' + test);
-              //var amount_needed_for_test = data[test]['amount'];
-              //var tube_color = data[test]['tube'];
-              //var tube_vol = tubes[tube_color]['vol'];
-              var specimen_string = data[camelize(test)]['data']['Specimen'];
-              console.log('specimen_string -> ' + specimen_string);
-              var amount_needed_for_test = get_amount_needed(specimen_string);
-              var tube_color = get_tube_color(specimen_string);
-              var tube_vol = tubes[tube_color]['vol'];
-              var num_of_tubes_needed = get_num_of_tubes_needed(amount_needed_for_test, tube_vol);
-              s += get_prefix(current_test) + get_tubes_output(tube_color, num_of_tubes_needed);
-              console.log(s);
-              this.emit(':askWithCard', s + ' Anything else?', 'Anything else?', 'Blood Draw', s + '\nLink: ' + data[camelize(test)]['link']);
-            }
-            else if (this.attributes.mode == 'multiple_tests') {
-              console.log('multiple test mode');
-              if (this.attributes.hasOwnProperty('tests')) {
-                this.attributes.tests.push(current_test[0]);
-                console.log(this.attributes.tests);
-              }
-              else {
-                this.attributes['tests'] = [current_test[0]];
-              }
-              if (this.attributes.tests.length == this.attributes.number_of_tests) {
-                console.log('got em all!');
-                s = get_multiple_tests_response(this.attributes.tests);
-                this.emit(':ask', s + ' Anything else?', 'well?');
-              }
-              else {
-                var response = 'What\'s the ' + ordinal(this.attributes.tests.length + 1) + ' test?';
-                console.log(response);
-                var reprompt = 'Please specify what the ' + ordinal(this.attributes.tests.length + 1) + ' test is.';
-                this.emit(':ask', response, reprompt);
-              }
-            }
-          }
-          else {
-            console.log('no mode property');
-          }
-        }
+        get_tube(test_data, this.attributes, this);
       }
       catch (e) {
+        console.log('caught error in GetTubeIntent -> ' + e);
         var response = 'Sorry, something went wrong. To start over, please say either 1 for a single test, or 2 for multiple tests.';
         var reprompt = 'Please say either 1 for a single test, or 2 for multiple tests.';
         this.emit(':ask', response, reprompt);
       }
     }
-
 };
 
+var process_number = function(answer, attributes) {
+  var response = '';
+  var reprompt = '';
+  if (attributes.hasOwnProperty('mode') && attributes.mode == 'multiple_tests') {
+    // test if you can get a non number here
+    if (answer == '?') {
+      console.log('found a question mark');
+      response = 'How many tests would you like to know about? Please say a number between 1 and 8.';
+      reprompt = 'Please specify how many tests you would like to know about.';
+      //this.emit(':ask', response, reprompt);
+    }
+    else {
+      answer = parseInt(answer);
+      if (answer >= 1 && answer <= 8) {
+        console.log('answer is between 1 and 8');
+        attributes['number_of_tests'] = answer;
+        response = 'What\'s the first test?';
+        reprompt = 'Please specify the first test.';
+        //this.emit(':ask', 'What\'s the first test?', 'Please specify the first test.');
+      }
+      else {
+        response = 'How many tests would you like to know about? Please say a number between 1 and 8.';
+        reprompt = 'Please specify how many tests you would like to know about.';
+        //this.emit(':ask', response, reprompt);
+      }
+    }
+  }
+  else {
+    if (answer == 1) {
+      attributes['mode'] = 'single_test';
+      response = 'What test would you like to know about?';
+      reprompt = 'Please specify which test you would like to know about.';
+      //this.emit(':ask', response, reprompt);
+    }
+    else if (answer == 2) {
+      attributes['mode'] = 'multiple_tests';
+      response = 'How many tests would you like to know about?';
+      reprompt = 'Please specify how many tests you would like to know about.';
+      //this.emit(':ask', response, reprompt);
+    }
+    else {
+      console.log('got answer that wasn\'t 1 or 2 -> ' + answer);
+      response = 'Sorry, I didn\'t quite get that. Please say either 1 for a single test, or 2 for multiple tests.';
+      reprompt = 'Please say either 1 for a single test, or 2 for multiple tests.';
+      //this.emit(':ask', response, reprompt);
+    }
+  }
+  return [response, reprompt];
+};
+
+var get_tube = function(test_data, attributes, emitter) {
+  var current_test = get_tests(test_data);
+  console.log(current_test);
+  if (current_test.length < 1) {
+    var s = 'Sorry, we couldn\'t find ' + test_data + ' in our records.';
+    emitter.emit(':tellWithCard', s, 'Blood Draw', s);
+  }
+  else {
+    if (attributes.hasOwnProperty('mode')) {
+      if (attributes.mode == 'single_test') {
+        console.log('single test mode');
+        var test = current_test[0];
+        handle_single_test_mode(test, emitter);
+      }
+      else if (attributes.mode == 'multiple_tests') {
+        console.log('multiple test mode');
+        var test = current_test[0];
+        handle_multiple_tests_mode(test, attributes, emitter);
+      }
+    }
+    else {
+      console.log('no mode property');
+    }
+  }
+};
+
+var handle_single_test_mode = function(test, emitter) {
+  console.log('in handle_single_test_mode');
+  console.log('test -> ' + test);
+  var specimen_string = data[camelize(test)]['data']['Specimen'];
+  var amount_needed_for_test = get_amount_needed(specimen_string);
+  var tube_color = get_tube_color(specimen_string);
+  var tube_vol = tubes[tube_color]['vol'];
+  var num_of_tubes_needed = get_num_of_tubes_needed(amount_needed_for_test, tube_vol);
+  var s = get_prefix([test]) + get_tubes_output(tube_color, num_of_tubes_needed);
+  console.log('s -> ' + s);
+  emitter.emit(':askWithCard', s + ' Anything else?', 'Anything else?', 'Blood Draw', s + '\nLink: ' + data[camelize(test)]['link']);
+};
+
+var handle_multiple_tests_mode = function(test, attributes, emitter) {
+  console.log('in handle_multiple_tests_mode');
+  console.log('attributes -> ' + attributes);
+  if (attributes.hasOwnProperty('tests')) {
+    console.log('tests property exists');
+    if (attributes.tests.indexOf(test) == -1) {
+      attributes.tests.push(test);
+    }
+    else {
+      console.log('that test is already in there');
+      var s = test + ' has already been added to the list. Please specify another test.';
+      emitter.emit(':ask', s, 'Please specify another test.');
+    }
+    console.log(attributes.tests);
+  }
+  else {
+    attributes['tests'] = [test];
+  }
+  console.log('attributes now -> ' + attributes);
+  if (attributes.tests.length == attributes.number_of_tests) {
+    console.log('got em all!');
+    var s = get_multiple_tests_response(attributes.tests);
+    emitter.emit(':ask', s + ' Anything else?', 'Anything else?');
+  }
+  else {
+    var response = 'What\'s the ' + ordinal(attributes.tests.length + 1) + ' test?';
+    console.log(response);
+    var reprompt = 'Please specify what the ' + ordinal(attributes.tests.length + 1) + ' test is.';
+    emitter.emit(':ask', response, reprompt);
+  }
+};
+
+// make each word in the test name uppercase, for interoperability w/ the data.json file
 var camelize = function(test) {
   console.log('in camelize');
   var words = test.split(' ');
@@ -181,6 +224,7 @@ var camelize = function(test) {
   return camel_test;
 };
 
+// parses the test's specimen field from the data.json file in order to find the amount needed
 var get_amount_needed = function(specimen) {
   console.log('in get_amount_needed');
   var words = specimen.split(' ');
@@ -193,8 +237,10 @@ var get_amount_needed = function(specimen) {
       }
     }
   }
+  throw 'couldn\'t find amount from specimen string';
 };
 
+// parses the test's specimen field from the data.json file in order to find the color of the tube needed
 var get_tube_color = function(specimen) {
   console.log('in get_tube_color');
   var words_space = specimen.toLowerCase().split(' ');
@@ -205,7 +251,7 @@ var get_tube_color = function(specimen) {
       words.push(words_slash[j]);
     }
   }
-  console.log('words -> ' + words);
+  //console.log('words -> ' + words);
   var colors = ['royal blue', 'red', 'light blue', 'gold', 'green', 'tan', 'yellow', 'pink', 'pearl', 'lavender'];
   for (var i=0; i<words.length; i++) {
     /*if (colors.includes(words[i])) {
@@ -223,6 +269,7 @@ var get_tube_color = function(specimen) {
   }
 }
 
+// receives the list of tests, populates an input_map based on tube color, and then constructs the output string using several helper methods
 var get_multiple_tests_response = function(tests) {
   console.log(tests);
   var s = "";
@@ -245,9 +292,9 @@ var get_multiple_tests_response = function(tests) {
   }
   console.log('input_map -> ' + JSON.stringify(input_map));
   for (var t in input_map) {
-    console.log(t.toUpperCase() + '!!!');
+    //console.log(t.toUpperCase() + '!!!');
     var tube_vol = tubes[t]['vol'];
-    console.log('tube_vol -> ' + tube_vol);
+    //console.log('tube_vol -> ' + tube_vol);
     s += get_prefix(input_map[t].tests) + get_tubes_output(t, get_num_of_tubes_needed(input_map[t].total, tube_vol));
     console.log(s);
     s = regularize(s, 0);
@@ -256,6 +303,7 @@ var get_multiple_tests_response = function(tests) {
   return s;
 };
 
+// fixes spacing between multiple sentences
 var regularize = function(output, start) {
   var i = output.indexOf('.', start);
   if (i == -1) {
@@ -273,10 +321,12 @@ var regularize = function(output, start) {
   }
 };
 
+// constructs substring w/ tube number and color (e.g. '2 royal blue tubes')
 var get_tubes_output = function(color, num) {
   return num + ' ' + color + (num > 1 ? ' tubes.' : ' tube.');
 };
 
+// calculates number of tubes of a particular color that are needed
 var get_num_of_tubes_needed = function(amount, vol) {
   if (amount <= vol) {
     return 1;
@@ -291,6 +341,7 @@ var get_num_of_tubes_needed = function(amount, vol) {
   }
 };
 
+// wrapper function for all the different prefix types
 var get_prefix = function(tests) {
   if (tests.length == 1) {
     return get_single_prefix(tests[0]);
@@ -304,10 +355,12 @@ var get_prefix = function(tests) {
   }
 }
 
+// simple single prefix (e.g. 'for the alcohol panel, use ')
 var get_single_prefix = function(test) {
   return 'For the ' + test_or_panel_format(test) + ', use ';
 }
 
+// constructs double prefix (differentiating btw panels and tests)
 var get_double_prefix = function(tests) {
   var layout = '';
   if (tests[0].includes('panel')) {
@@ -337,6 +390,7 @@ var get_double_prefix = function(tests) {
   }
 };
 
+// constructs prefix for muliple tests
 var get_multiple_prefix = function(tests) {
   console.log('in get_multiple_prefix');
   var s = '';
@@ -396,22 +450,14 @@ var get_multiple_prefix = function(tests) {
   return s;
 };
 
+// combines test list, uses test suffix
 var format_test_list = function(list) {
-  /*var s = '';
-  for (var i in list) {
-    s += list[i]
-    if (i < list.length-1) {
-      s += ', ';
-    }
-    if (i == list.length-2) {
-      s += 'and ';
-    }
-  }*/
   var s = combine(list);
   s += ' tests, use ';
   return s;
 };
 
+// combines panel list, uses panel suffix
 var format_panel_list = function(list) {
   var panels = [];
   for (var i in list) {
@@ -422,22 +468,13 @@ var format_panel_list = function(list) {
     return panels[0] + ' and ' + panels[1] + ' panels';
   }
   else {
-    /*var s = '';
-    for (var p in panels) {
-      s += panels[p]
-      if (p < panels.length-1) {
-        s += ', ';
-      }
-      if (p == panels.length-2) {
-        s += 'and ';
-      }
-    }*/
     var s = combine(panels);
     s += ' panels, use ';
     return s;
   }
 };
 
+// converts test array to list w/ commas and ands
 var combine = function(list) {
   var s = '';
   for (var i in list) {
@@ -452,6 +489,7 @@ var combine = function(list) {
   return s;
 }
 
+// returns test or panel
 var test_or_panel_format = function(test) {
   var s = ''
   if (test.includes('panel')) {
@@ -462,6 +500,7 @@ var test_or_panel_format = function(test) {
   return s;
 };
 
+// receives test from input, finds corresponding entry in data.json file
 var get_tests = function(test) {
     var words = get_words(test);
     console.log(words);
@@ -489,6 +528,7 @@ var get_tests = function(test) {
     return tests;
 };
 
+// strips ands from raw sentence containing multiple tests
 var strip_ands = function(words) {
     var new_words = [];
     for (var i = 0; i < words.length; i++) {
@@ -499,6 +539,7 @@ var strip_ands = function(words) {
     return new_words;
 };
 
+// gets words from raw sentence containing multiple tests
 var get_words = function(test) {
     var words = [];
     var current = "";
@@ -517,6 +558,7 @@ var get_words = function(test) {
     return words;
 };
 
+// maps nicknames, abbreviations, acronyms to corresponding property in data.json file
 var test_map = {
     "cbc": "complete blood count",
     "bmp": "basic metabolic panel",
@@ -544,6 +586,7 @@ var test_map = {
     "ast": "aspartate aminotransferase"
 };
 
+// tube objects w/ relevant information, only utilizing volume for now
 var tubes = {
   'royal blue': {
       vol: 7,
