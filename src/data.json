@@ -133,7 +133,7 @@
       "Group/Individual Test": "Individual",
       "Laboratory": "Core Referral Testing",
       "Tube Station": "888",
-      "Specimen": "4mL blood/red top tube ON ICE/NO SST; see Comments for additional  information",
+      "Specimen": "4 mL blood/red top tube ON ICE/NO SST; see Comments for additional  information",
       "Availability": "Referral Laboratory - Mayo Medical Laboratories",
       "Turnaround Time": "4-10 days",
       "Reference Range": "See separate report",
@@ -352,7 +352,7 @@
       "\r\nInternal Reference Testing Specimen Handling \r\nInstructions:\r\n": "\r\nPlatelet Poor Plasma -minimum 4 aliquots of minimum 0.3 mL.  \r\nUse all plasma.  Freeze within 4 hours.\r\n"
     }
   },
-  "Alpha-Fetoprotein Maternal": {
+  "Alpha Fetoprotein Maternal": {
     "link": "http://www.uncmedicalcenter.org/mclendon-clinical-laboratories/available-tests/alpha-fetoprotein-maternal-serum/",
     "data": {
       "Test ID": "LAB692",
@@ -416,19 +416,6 @@
       "Turnaround Time": "5 - 10 DAYS",
       "Reference Range": "See separate report",
       "Comments:": "Comments:"
-    }
-  },
-  "ANBE": {
-    "link": "http://www.uncmedicalcenter.org/mclendon-clinical-laboratories/available-tests/alpha-naphthyl-butyrateanbe/",
-    "data": {
-      "EPIC Order ": "Ordered by Lab only",
-      "CPT Code(s)": "88319",
-      "Laboratory": "Special Hematology and Hematopathology",
-      "Specimen": "Blood or Bone Marrow See Comments",
-      "Stability": "Store smears protected from heat and light if staining will delayed.",
-      "Availability": "Monday-Friday 08:00-14:00",
-      "Reference Range": "Interpretation",
-      "Comments": "For Request Call Hematopathology (984)974-8320"
     }
   },
   "ALPS Panel": {
@@ -768,7 +755,7 @@
       "Comments": "Comments"
     }
   },
-  "Antiretroviral TDM1": {
+  "Antiretroviral Tdm1": {
     "link": "http://www.uncmedicalcenter.org/mclendon-clinical-laboratories/available-tests/antiretroviral-tdm-1arv-tdm-1/",
     "data": {
       "Test ID": "LAB5793",
@@ -784,7 +771,7 @@
       "Comments": "Collect 2 EDTA/lavender top tubes and place on wet ice. Deliver to Core Lab immediately to be spun in refrigerated centrifuge within 1 hour of collection."
     }
   },
-  "Antiretroviral TDM2": {
+  "Antiretroviral Tdm2": {
     "link": "http://www.uncmedicalcenter.org/mclendon-clinical-laboratories/available-tests/antiretroviral-tdm-2arv-tdm-2/",
     "data": {
       "Test ID": "LAB5794",
@@ -800,7 +787,7 @@
       "Comments": "\r\nCollect 2 EDTA/Lavender top tube and place on wet ice.  Deliver to Core Lab. immediately to be spun in refrigerated centrifuge within 1 hour of collection.\r\n"
     }
   },
-  "Antiretroviral TDM3": {
+  "Antiretroviral Tdm3": {
     "link": "http://www.uncmedicalcenter.org/mclendon-clinical-laboratories/available-tests/antiretroviral-tdm-3arv-tdm-3/",
     "data": {
       "Test ID": "LAB5795",
@@ -816,7 +803,7 @@
       "Comments": "Collect 2 EDTA/lavender top tubes and place on wet ice.  Deliver to Core Lab immediately to be spun in refrigerated centrifuge within 1 hour of collection."
     }
   },
-  "Antiretroviral TDM4": {
+  "Antiretroviral Tdm4": {
     "link": "http://www.uncmedicalcenter.org/mclendon-clinical-laboratories/available-tests/antiretroviral-tdm-4arv-tdm-4/",
     "data": {
       "Test ID": "LAB5796",
@@ -832,7 +819,7 @@
       "Comments": "\r\nCollect 2 EDTA/lavender top tubes and place on wet ice.  Deliver to Core Lab immediately to be spun in refrigerated centrifuge within 1 hour of collection.\r\n"
     }
   },
-  "Antiretroviral TDM5": {
+  "Antiretroviral Tdm5": {
     "link": "http://www.uncmedicalcenter.org/mclendon-clinical-laboratories/available-tests/antiretroviral-tdm-5arv-tdm-5/",
     "data": {
       "Test ID": "LAB5797",
@@ -1022,7 +1009,7 @@
       "-See numbered memo Core #134 dated February 24, 2017 for additional information.": "-See numbered memo Core #134 dated February 24, 2017 for additional information."
     }
   },
-  "Beta-Carotene": {
+  "Beta Carotene": {
     "link": "http://www.uncmedicalcenter.org/mclendon-clinical-laboratories/available-tests/beta-carotene/",
     "data": {
       "Test ID": "LAB6004",
@@ -1038,7 +1025,7 @@
       "Comments": "Fasting for at least 12 hours; No vitamin supplements or alcohol consumed for 24 hours before specimen collection."
     }
   },
-  "Beta-Hydroxybutyrate": {
+  "Beta Hydroxybutyrate": {
     "link": "http://www.uncmedicalcenter.org/mclendon-clinical-laboratories/available-tests/beta-hydroxybutyrate/",
     "data": {
       "Test ID": "LAB5393",
@@ -1054,7 +1041,7 @@
       " Comments": "Sample needs to be centrifuged within 2 hours of collection."
     }
   },
-  "Bile Acid, Serum": {
+  "Bile Acid": {
     "link": "http://www.uncmedicalcenter.org/mclendon-clinical-laboratories/available-tests/bile-acid-serum/",
     "data": {
       "Test ID": "LAB693",
@@ -1088,7 +1075,7 @@
       "Internal Reference Testing Specimen Handling Instructions:": "Centrifuge, aliquot, refrigerate"
     }
   },
-  "Bilirubin, Conjugated": {
+  "Bilirubin": {
     "link": "http://www.uncmedicalcenter.org/mclendon-clinical-laboratories/available-tests/bilirubin-conjugated/",
     "data": {
       "Test ID": "N/A",
@@ -1108,7 +1095,7 @@
       "15 days +": "<0.1"
     }
   },
-  "Bilirubin, Direct, Serum": {
+  "Bilirubin Direct": {
     "link": "http://www.uncmedicalcenter.org/mclendon-clinical-laboratories/available-tests/bilirubin-direct-serum/",
     "data": {
       "Test ID": "LAB52",
@@ -1126,7 +1113,7 @@
       "Comments": "Protect from Light"
     }
   },
-  "Bilirubin, Neonatal": {
+  "Bilirubin Neonatal": {
     "link": "http://www.uncmedicalcenter.org/mclendon-clinical-laboratories/available-tests/bilirubin-neonatal/",
     "data": {
       "Test ID": "LAB51A",
@@ -1252,7 +1239,7 @@
       "Comments": "\r\nPlease call Lab 984-974-1825 with questions. The lab strongly recommends patients be seen by the UNC Cancer Genetics Clinic (919-843-8724) prior to ordering. \r\n\r\nEPIC Ordering Instructions:\r\n- BRCA UNCOMMON DEL/DUP VARIANTS [LAB10754]\r\n  To be ordered only if sequencing has already been\r\n  performed, and a negative report is available. \r\n  CPT Code-81213\r\n\r\n- BRCA1 KNOWN FAMILIAR MUTATION PANEL [LAB10748]\r\n  A copy of the report from an affected relative is\r\n  required, and a sample from an affected relative is\r\n  strongly recommended. CPT Code-81215\r\n\r\n- BRCA1/BRCA2 MUTATION PANEL [LAB10750]\r\n  Includes Next Generation Sequencing and\r\n  Deletion/Duplication analysis. CPT Code-81162\r\n\r\n- BRCA2 KNOWN FAMILIAL MUTATION [LAB10749]\r\n  A copy of the report from an affected relative is\r\n  required, and a sample from an affected relative is\r\n  strongly recommended. CPT Code-81217\r\n\r\n\r\n- BRCA1/BRCA2 ASHKENAZI JEWISH MUTATION PANEL\r\n  [LAB10747]\r\n  Can be ordered alone or with a request to reflex to the\r\n  BRCA1/BRCA2 mutation panel if negative.\r\n  CPT Code-81212\r\n"
     }
   },
-  "BUN (Urea Nitrogen)": {
+  "BUN": {
     "link": "http://www.uncmedicalcenter.org/mclendon-clinical-laboratories/available-tests/bun-urea-nitrogen/",
     "data": {
       "Test ID": "LAB140",
@@ -1289,7 +1276,7 @@
       "Comments": "Collect sample on ice and deliver immediately to STAT tube station #888"
     }
   },
-  "C-Peptide, Serum": {
+  "C Peptide": {
     "link": "http://www.uncmedicalcenter.org/mclendon-clinical-laboratories/available-tests/c-peptide-serum/",
     "data": {
       "Test ID": "LAB521",
@@ -1305,7 +1292,7 @@
       "Comments": "Sample must be spun down within 2 hours of collection"
     }
   },
-  "C-Reactive Protein": {
+  "C Reactive Protein": {
     "link": "http://www.uncmedicalcenter.org/mclendon-clinical-laboratories/available-tests/c-reactive-protein/",
     "data": {
       "Test ID": "LAB149",
@@ -1414,7 +1401,7 @@
       "Group/Individual Test": "Individual",
       "Laboratory": "Core Lab - performed by: Special Chemistry Laboratory",
       "Tube Station": "30",
-      "Specimen": "1 royal blue top (preferred sample), or red top/gold top/green top/lavender top tube are also acceptable; see Comments",
+      "Specimen": "7 ml royal blue top (preferred sample), or red top/gold top/green top/lavender top tube are also acceptable; see Comments",
       "Stability": "Frozen: Not Acceptable",
       "Refrigerated  2 - 8  °C: 3 days": "Refrigerated  2 - 8  °C: 3 days",
       "Ambient: Not acceptable": "Ambient: Not acceptable",
@@ -1520,7 +1507,7 @@
       "Comments": "Place on ice and deliver or \"tube\" immediately. Specimens with Needles attached will NOT be accepted"
     }
   },
-  "Calcium, Serum": {
+  "Calcium": {
     "link": "http://www.uncmedicalcenter.org/mclendon-clinical-laboratories/available-tests/calcium-serum/",
     "data": {
       "Test ID": "LAB53",
@@ -1560,7 +1547,7 @@
       "Comments": ""
     }
   },
-  "Cannabinoids, Serum": {
+  "Cannabinoids": {
     "link": "http://www.uncmedicalcenter.org/mclendon-clinical-laboratories/available-tests/cannabinoids-serum/",
     "data": {
       "Test ID": "LAB5396",
@@ -1643,7 +1630,7 @@
       "Comments": ""
     }
   },
-  "Carnitine, Plasma": {
+  "Carnitine": {
     "link": "http://www.uncmedicalcenter.org/mclendon-clinical-laboratories/available-tests/carnitine-plasma/",
     "data": {
       "Test ID": "LAB815",
@@ -1680,7 +1667,7 @@
       "Comments": ""
     }
   },
-  "Cat Scratch Fever Ab (Bartonella Ab)": {
+  "Bartonella Antibody Panel": {
     "link": "http://www.uncmedicalcenter.org/mclendon-clinical-laboratories/available-tests/cat-scratch-fever-ab-bartonella-ab/",
     "data": {
       "Test ID": "LAB785",
@@ -1689,7 +1676,7 @@
       "Group/Individual Test": "Group",
       "Laboratory": "Core Referral Testing",
       "Tube Station": "30",
-      "Specimen": "3mL blood/serum separator/gold top tube",
+      "Specimen": "3 ml blood/serum separator/gold top tube",
       "Availability": "Referral Laboratory - Mayo Medical Laboratories",
       "Turnaround Time": "3-5 Days",
       "Reference Range": "See report",

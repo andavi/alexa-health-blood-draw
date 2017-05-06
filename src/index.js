@@ -6,7 +6,7 @@ var ordinal = require('ordinal').english;
 //var file_name = 'old_data.json';
 var file_name = 'data.json';
 var data = JSON.parse(fs.readFileSync(file_name));
-
+var test_map = JSON.parse(fs.readFileSync('test_map.json'));
 //var APP_ID = "amzn1.ask.skill.b229e3a0-3ac1-4d0d-9c3b-cbf8131bde8d";
 
 /*
@@ -19,7 +19,6 @@ var test_mode = false;
 
 exports.handler = function(event, context, callback) {
     //event.session['attributes']['flag'] = 'true';
-
     var alexa = Alexa.handler(event, context);
     alexa.registerHandlers(handlers);
     alexa.execute();
@@ -100,7 +99,6 @@ var process_number = function(answer, attributes) {
       console.log('found a question mark');
       response = 'How many tests would you like to know about? Please say a number between 1 and 8.';
       reprompt = 'Please specify how many tests you would like to know about.';
-      //this.emit(':ask', response, reprompt);
     }
     else {
       answer = parseInt(answer);
@@ -109,12 +107,10 @@ var process_number = function(answer, attributes) {
         attributes['number_of_tests'] = answer;
         response = 'What\'s the first test?';
         reprompt = 'Please specify the first test.';
-        //this.emit(':ask', 'What\'s the first test?', 'Please specify the first test.');
       }
       else {
         response = 'How many tests would you like to know about? Please say a number between 1 and 8.';
         reprompt = 'Please specify how many tests you would like to know about.';
-        //this.emit(':ask', response, reprompt);
       }
     }
   }
@@ -123,19 +119,16 @@ var process_number = function(answer, attributes) {
       attributes['mode'] = 'single_test';
       response = 'What test would you like to know about?';
       reprompt = 'Please specify which test you would like to know about.';
-      //this.emit(':ask', response, reprompt);
     }
     else if (answer == 2) {
       attributes['mode'] = 'multiple_tests';
       response = 'How many tests would you like to know about?';
       reprompt = 'Please specify how many tests you would like to know about.';
-      //this.emit(':ask', response, reprompt);
     }
     else {
       console.log('got answer that wasn\'t 1 or 2 -> ' + answer);
       response = 'Sorry, I didn\'t quite get that. Please say either 1 for a single test, or 2 for multiple tests.';
       reprompt = 'Please say either 1 for a single test, or 2 for multiple tests.';
-      //this.emit(':ask', response, reprompt);
     }
   }
   return [response, reprompt];
@@ -214,35 +207,37 @@ var handle_multiple_tests_mode = function(test, attributes, emitter) {
 
 // make each word in the test name uppercase, for interoperability w/ the data.json file
 var camelize = function(test) {
-  console.log('in camelize');
+  //console.log('in camelize, test -> ' + test);
   var words = test.split(' ');
   for (var i=0; i<words.length; i++) {
     words[i] = words[i].slice(0, 1).toUpperCase() + words[i].slice(1);
   }
   var camel_test = words.join(' ');
-  console.log('camel_test -> ' + camel_test);
+  //console.log('camel_test -> ' + camel_test);
   return camel_test;
 };
+exports.camelize = camelize;
 
 // parses the test's specimen field from the data.json file in order to find the amount needed
 var get_amount_needed = function(specimen) {
-  console.log('in get_amount_needed');
+  //console.log('in get_amount_needed');
   var words = specimen.split(' ');
   for (var i=0; i<words.length; i++) {
-    console.log(i, words[i]);
+    //console.log(i, words[i]);
     if (words[i].toLowerCase() == 'ml') {
-      console.log('found an ml');
+      //console.log('found an ml');
       if (i != 0) {
         return parseInt(words[i-1]);
       }
     }
   }
-  throw 'couldn\'t find amount from specimen string';
+  throw 'couldn\'t find amount from specimen string -> ' + specimen;
 };
+exports.get_amount_needed = get_amount_needed;
 
 // parses the test's specimen field from the data.json file in order to find the color of the tube needed
 var get_tube_color = function(specimen) {
-  console.log('in get_tube_color');
+  //console.log('in get_tube_color');
   var words_space = specimen.toLowerCase().split(' ');
   var words = [];
   for (var i=0; i<words_space.length; i++) {
@@ -268,6 +263,7 @@ var get_tube_color = function(specimen) {
     }
   }
 }
+exports.get_tube_color = get_tube_color;
 
 // receives the list of tests, populates an input_map based on tube color, and then constructs the output string using several helper methods
 var get_multiple_tests_response = function(tests) {
@@ -340,6 +336,7 @@ var get_num_of_tubes_needed = function(amount, vol) {
     return Math.floor(amount / vol) + (amount % vol != 0 ? 1 : 0);
   }
 };
+exports.get_num_of_tubes_needed = get_num_of_tubes_needed;
 
 // wrapper function for all the different prefix types
 var get_prefix = function(tests) {
@@ -523,6 +520,10 @@ var get_tests = function(test) {
             console.log('test_map has property');
             tests.push(test_map[current]);
             current = "";
+        } else if (data.hasOwnProperty(current.toUpperCase())) {
+            console.log('data has uppercase property');
+            tests.push(current.toUpperCase());
+            current = "";
         }
     }
     return tests;
@@ -556,34 +557,6 @@ var get_words = function(test) {
     }
     words.push(current);
     return words;
-};
-
-// maps nicknames, abbreviations, acronyms to corresponding property in data.json file
-var test_map = {
-    "cbc": "complete blood count",
-    "bmp": "basic metabolic panel",
-    "lipid": "lipids panel",
-    "lipids": "lipids panel",
-    "hepatic function": "hepatic function panel",
-    "liver function panel": "hepatic function panel",
-    "liver function": "hepatic function panel",
-    "liver": "hepatic function panel",
-    "vitamin b12": "vitamin b12 level",
-    "b12": "vitamin b12 level",
-    "b12 level": "vitamin b12 level",
-    "vitamin b 12": "vitamin b12 level",
-    "b 12": "vitamin b12 level",
-    "b 12 level": "vitamin b12 level",
-    "alcohol": "alcohol panel",
-    "aluminum": "aluminum level",
-    "ama": "antimitochondrial antibody",
-    "elavil": "amitriptyline nortriptyline level",
-    "ace": "angiotensin converting enzyme",
-    "amylase": "amylase level",
-    "anca": "anti neutrophilic cytoplasmic antibody",
-    "ana": "anti nuclear antibody",
-    "arixtra": "arixtra level",
-    "ast": "aspartate aminotransferase"
 };
 
 // tube objects w/ relevant information, only utilizing volume for now
@@ -655,3 +628,4 @@ var tubes = {
     comments: ''
   }
 };
+exports.tubes = tubes;
