@@ -1,6 +1,6 @@
-<h1>Parent Educational Reference</h1>
+<h1>Blood Draw</h1>
 
-This repository is for an Amazon Alexa skill prototype to be used by clinicians as a reference to help them determine the type and amount of blood draw tubes needed for a particular test or sequence of tests.
+This <a href="https://github.com/andavi/alexa-health-blood-draw">repository</a> is for an Amazon Alexa skill prototype to be used by clinicians as a reference to help them determine the type and amount of blood draw tubes needed for a particular test or sequence of tests.
 
 
 <h3>Installation</h3>
@@ -8,7 +8,7 @@ This repository is for an Amazon Alexa skill prototype to be used by clinicians 
 In order to use this skill with your Alexa-enabled device you will need to do two things:
 
 <ol>
-    <li>Put the contents of the speechAssets folder into their appropriate places at developer.amazon.com</li>
+    <li>Put the contents of the speechAssets/ folder into their appropriate places at developer.amazon.com</li>
     <li>Compress the contents of the src folder (everything except for the scrape/ and test/ directories) and upload it into a Lambda function at aws.amazon.com which will be linked to the skill set up at Amazon Developer</li>
 </ol>
 
@@ -20,7 +20,7 @@ When you open the Blood Draw skill you will be given an option of whether you wa
 
 <h4>Single Test Mode</h4>
 
-The skill will ask for you for the name of the test, and after you tell it the test name, it'll reply with the relevant data and then ask if there's anything else you'd like to know about. If you would like to go back to the opening question (single test or multiple tests), then say yes. If you'd like to quit out of the skill, then say no.
+The skill will ask for you for the name of the test, and after you tell it the test name, it'll reply with the relevant data and then ask if there's anything else you'd like to know about. If you would like to go back to the opening question ("single test or multiple tests"), then say yes. If you'd like to quit out of the skill, then say no.
 
 <h4>Multiple Test Mode</h4>
 

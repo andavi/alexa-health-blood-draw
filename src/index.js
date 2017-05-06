@@ -267,8 +267,6 @@ var get_multiple_tests_response = function(tests) {
   var input_map = {};
   for (var i = 0; i < tests.length; i++) {
       var test = tests[i];
-      //var amount_needed_for_test = data[test]['amount'];
-      //var tube_color = data[test]['tube'];
       var specimen_string = data[camelize(test)]['data']['Specimen'];
       console.log('specimen_string -> ' + specimen_string);
       var amount_needed_for_test = get_amount_needed(specimen_string);
