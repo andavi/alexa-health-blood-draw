@@ -3,11 +3,9 @@ var Alexa = require("alexa-sdk");
 var fs = require("fs");
 var ordinal = require('ordinal').english;
 
-//var file_name = 'old_data.json';
 var file_name = 'data.json';
 var data = JSON.parse(fs.readFileSync(file_name));
 var test_map = JSON.parse(fs.readFileSync('test_map.json'));
-//var APP_ID = "amzn1.ask.skill.b229e3a0-3ac1-4d0d-9c3b-cbf8131bde8d";
 
 /*
   TESTING PROCEDURE:
@@ -15,10 +13,7 @@ var test_map = JSON.parse(fs.readFileSync('test_map.json'));
     - node_modules/.bin/mocha
 */
 
-var test_mode = false;
-
 exports.handler = function(event, context, callback) {
-    //event.session['attributes']['flag'] = 'true';
     var alexa = Alexa.handler(event, context);
     alexa.registerHandlers(handlers);
     alexa.execute();
