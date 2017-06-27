@@ -1,5 +1,7 @@
 <h1>Blood Draw</h1>
 
+><sub>Our group <a href="https://alexahealth.web.unc.edu/">website</a> with more information including documentation, architecture diagrams, and presentation slides given during the Software Engineering Lab course.</sub>
+
 This <a href="https://github.com/andavi/alexa-health-blood-draw">repository</a> is for an Amazon Alexa skill prototype to be used by clinicians as a reference to help them determine the type and amount of blood draw tubes needed for a particular test or sequence of tests.
 
 
